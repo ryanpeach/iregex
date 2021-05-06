@@ -1,10 +1,10 @@
 language: "python"
 python:
   - "3.7"
-  - "3.8"
-  - "3.9"
-  - "3.9-dev"  # 3.9 development branch
-  - "nightly"  # nightly build
+  # - "3.8"
+  # - "3.9"
+  # - "3.9-dev"  # 3.9 development branch
+  # - "nightly"  # nightly build
 stages:
   - test
   - name: deploy
@@ -42,7 +42,7 @@ jobs:
         - touch _build/html/.nojekyll
       deploy:
         provider: pages
-        skip_cleanup: true
+        cleanup: false
         github_token: $GITHUB_TOKEN
         keep-history: true
         local_dir: _build/html

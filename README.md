@@ -21,11 +21,14 @@ The regex for this would be:
 In this library the code would be:
 
 ```python
-from py_idiomatic_regex import *
+from iregex import Regex
+from iregex.consts import ALPHA, ALPHA_NUMERIC
 Regex(ALPHA).literal(
     Regex().any_char("_", ALPHA_NUMERIC).zero_or_more_repetitions()
 )
 ```
+
+Just take a look at the documentation for the `Regex` class to get an idea of all the methods you can use!
 
 You chain methods together for sequential operations and nest literals for nested operations.
 
@@ -35,6 +38,6 @@ Please make a contribution, this library is still growing!
 
 Please download [poetry](https://python-poetry.org/) and run `poetry install` to set up your build environment.
 
-Please run `pre-commit install` to comply with git pre-commit standards.
+We use `mypy` (so be sure to type your code), `flake8`, and `black` so be sure to use `pre-commit install` before your first push to comply with git pre-commit standards. Otherwise your pull request will not make it past TravisCI.
 
-Always `pytest` your code.
+Always `pytest` your code and make PR's with good code coverage.
