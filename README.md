@@ -5,11 +5,18 @@
 
 [Documentation Available Here](https://ryanpeach.github.com/py_idiomatic_regex)
 
+
 An easier way to write regex in Python using OOP instead of strings.
 
 Makes the code much easier to read and understand while still using Regex under the hood.
 
 Very easy to use, entirely contained within two files `consts.py` and `regex.py`.
+
+## Installation
+
+[Available on PyPi](https://pypi.org/project/iregex/)
+
+`pip install iregex`
 
 ## Examples
 
