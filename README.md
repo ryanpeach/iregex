@@ -3,6 +3,8 @@
 ![TravisCI Build Status](https://travis-ci.com/ryanpeach/py_idiomatic_regex.svg?branch=master)
 [![codecov](https://codecov.io/gh/ryanpeach/py_idiomatic_regex/branch/master/graph/badge.svg)](https://codecov.io/gh/ryanpeach/py_idiomatic_regex)
 
+[Documentation Available Here](https://ryanpeach.github.com/py_idiomatic_regex)
+
 An easier way to write regex in Python using OOP instead of strings.
 
 Makes the code much easier to read and understand while still using Regex under the hood.
