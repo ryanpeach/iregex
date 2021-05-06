@@ -1,0 +1,58 @@
+language: "python"
+python:
+  - "3.7"
+  # - "3.8"
+  # - "3.9"
+  # - "3.9-dev"  # 3.9 development branch
+  # - "nightly"  # nightly build
+
+branches:
+  only:
+  - master
+  - staging
+
+stages:
+  - test
+  - name: deploy
+    if: tag IS present AND branch = master
+
+install:
+  - python -m pip install --upgrade pip
+  - python -m pip install poetry
+  - poetry install --no-root -v
+
+jobs:
+  include:
+    - stage: test
+      script: poetry run coverage run -m pytest iregex
+      after_success:
+        - poetry run codecov
+    - script: poetry run mypy iregex
+    - script: poetry run flake8 iregex
+
+    - stage: deploy
+      script: skip
+      before_deploy:
+        - poetry config repositories.mypypi http://mypypi.example.com/simple
+        - poetry config http-basic.pypi $PYPI_USERNAME $PYPI_PASSWORD
+      deploy:
+        provider: script
+        script: poetry publish --build
+        on:
+          tags: true
+          repo: ryanpeach/py_idiomatic_regex
+          branch: master
+    - script: skip
+      before_deploy:
+        - poetry run make html
+        - touch _build/html/.nojekyll
+      deploy:
+        provider: pages
+        cleanup: false
+        github_token: $GITHUB_TOKEN
+        keep-history: true
+        local_dir: _build/html
+        on:
+          tags: true
+          repo: ryanpeach/py_idiomatic_regex
+          branch: master
