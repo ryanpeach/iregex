@@ -32,8 +32,7 @@ jobs:
     - stage: deploy
       script: skip
       before_deploy:
-        - poetry config repositories.mypypi http://mypypi.example.com/simple
-        - poetry config http-basic.pypi $PYPI_USERNAME $PYPI_PASSWORD
+        - poetry config pypi-token.pypi $PYPI_PASSWORD
       deploy:
         provider: script
         script: poetry publish --build
