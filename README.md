@@ -45,6 +45,15 @@ Regex(ALPHA).literal(
 ).compile()
 ```
 
+OR
+
+```python
+from iregex import Regex
+from iregex.consts import ALPHA, ALPHA_NUMERIC
+(ALPHA + Regex().any_char("_", ALPHA_NUMERIC).zero_or_more_repetitions()).compile()
+```
+
+
 Just take a look at the documentation for the `Regex` class to get an idea of all the methods you can use!
 
 You chain methods together for sequential operations and nest literals for nested operations.

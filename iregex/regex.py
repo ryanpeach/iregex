@@ -166,35 +166,116 @@ class Regex:
         """Two Regex's are equal if their regex strings are equal."""
         return str(self) == str(other)
 
-    def __add__(self, other: "Regex") -> "Regex":
+    def __add__(self, other: Union["Regex", str]) -> "Regex":
         """
-        Adding two Regex's is just appending their strings. But they aren't allowed to share capture group names.
+        Adding two Regex's is just appending their strings.
+        But they aren't allowed to share capture group names.
+        Can be used as an easy substitute for literal. But is a little slower.
+
         :raises SetIntersectionError: If the two _capture_groups share any values.
+        :raises TypeError: If other is not either a Regex or a string.
         """
+        # Handle data types
+        if isinstance(other, str):
+            other_ = Regex(other)
+        elif isinstance(other, Regex):
+            other_ = other
+            if set(self._capture_groups) & set(other._capture_groups):
+                raise SetIntersectionError(
+                    "Capture groups in self and other have common names."
+                )
+        else:
+            raise TypeError(f"Unrecognized type: {type(other)}")
+        del other  # So you don't reuse the variable
+
         out = Regex()
-        out._data = self._data + other._data
-        if set(self._capture_groups) & set(other._capture_groups):
-            raise SetIntersectionError(
-                "Capture groups in self and other have common names."
-            )
-        out._capture_groups = self._capture_groups + other._capture_groups
+        out._data = self._data + other_._data
+        out._capture_groups = self._capture_groups + other_._capture_groups
         return out
 
-    def __or__(self, other: "Regex") -> "Regex":
+    def __radd__(self, other: Union["Regex", str]) -> "Regex":
+        """
+        Adding two Regex's is just appending their strings.
+        But they aren't allowed to share capture group names.
+        Can be used as an easy substitute for literal. But is a little slower.
+
+        :raises SetIntersectionError: If the two _capture_groups share any values.
+        :raises TypeError: If other is not either a Regex or a string.
+        """
+        # Handle data types
+        if isinstance(other, str):
+            other_ = Regex(other)
+        elif isinstance(other, Regex):
+            other_ = other
+            if set(self._capture_groups) & set(other._capture_groups):
+                raise SetIntersectionError(
+                    "Capture groups in self and other have common names."
+                )
+        else:
+            raise TypeError(f"Unrecognized type: {type(other)}")
+        del other  # So you don't reuse the variable
+
+        out = Regex()
+        out._data = other_._data + self._data
+        out._capture_groups = other_._capture_groups + self._capture_groups
+        return out
+
+    def __or__(self, other: Union[str, "Regex"]) -> "Regex":
         """
         The `or` of two Regex's is the group `(self|other)`.
         Neither self nor other may contained named capture groups.
         :raises NonEmptyError: If either contains named capture groups.
         """
-        out = Regex()
+        # Handle data types
+        if isinstance(other, str):
+            other_ = Regex(other)
+        elif isinstance(other, Regex):
+            other_ = other
+            if other._capture_groups:
+                raise NonEmptyError(
+                    f"Capture groups in other is not empty. Found: {other._capture_groups}"
+                )
+        else:
+            raise TypeError(f"Unrecognized type: {type(other)}")
+        del other  # So you don't reuse the variable
+
+        # Some other errors
         if self._capture_groups:
             raise NonEmptyError(
                 f"Capture groups in self is not empty. Found: {self._capture_groups}"
             )
-        if other._capture_groups:
+
+        out = Regex()
+        out._data = ["(?:"] + self._data + ["|"] + other_._data + [")"]
+        out._capture_groups = []
+        return out
+
+    def __ror__(self, other: Union[str, "Regex"]) -> "Regex":
+        """
+        The `or` of two Regex's is the group `(self|other)`.
+        Neither self nor other may contained named capture groups.
+        :raises NonEmptyError: If either contains named capture groups.
+        """
+        # Handle data types
+        if isinstance(other, str):
+            other_ = Regex(other)
+        elif isinstance(other, Regex):
+            other_ = other
+            if other._capture_groups:
+                raise NonEmptyError(
+                    f"Capture groups in other is not empty. Found: {other._capture_groups}"
+                )
+        else:
+            raise TypeError(f"Unrecognized type: {type(other)}")
+        del other  # So you don't reuse the variable
+
+        # Some other errors
+        if self._capture_groups:
             raise NonEmptyError(
-                f"Capture groups in other is not empty. Found: {other._capture_groups}"
+                f"Capture groups in self is not empty. Found: {self._capture_groups}"
             )
-        out._data = ["(?:"] + self._data + ["|"] + other._data + [")"]
+
+        out = Regex()
+        out._data = ["(?:"] + other_._data + ["|"] + self._data + [")"]
         out._capture_groups = []
         return out
