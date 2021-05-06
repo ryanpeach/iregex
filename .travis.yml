@@ -9,7 +9,7 @@ python:
 stages:
   - test
   - name: deploy
-    if: tag IS present
+    if: tag IS present AND branch = master
 
 install:
   - python -m pip install --upgrade pip
@@ -19,7 +19,7 @@ install:
 jobs:
   include:
     - stage: test
-      script: poetry run coverage run pytest iregex
+      script: poetry run coverage run -m pytest iregex
       after_success:
         - poetry run codecov
     - script: poetry run mypy iregex
@@ -36,6 +36,7 @@ jobs:
         on:
           tags: true
           repo: ryanpeach/py_idiomatic_regex
+          branch: master
     - script: skip
       before_deploy:
         - poetry run make html
@@ -49,3 +50,4 @@ jobs:
         on:
           tags: true
           repo: ryanpeach/py_idiomatic_regex
+          branch: master

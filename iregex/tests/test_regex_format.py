@@ -167,12 +167,11 @@ def test_add_set_intersection_error(self: Regex, other: Regex) -> None:
 
 
 @pytest.mark.parametrize(
-    "self,other,result",
-    [(Regex(NUMERIC), Regex(NUMERIC), Regex(NUMERIC).literal(NUMERIC))],
+    "self,other,result", [(Regex(NUMERIC), Regex(NUMERIC), f"(?:{NUMERIC}|{NUMERIC})")],
 )
 def test_or(self: Regex, other: Regex, result: Regex) -> None:
     """Tests basic or."""
-    assert (self | other) == result
+    assert str(self | other) == str(result)
 
 
 @pytest.mark.parametrize(
