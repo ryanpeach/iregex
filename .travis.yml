@@ -13,8 +13,7 @@ branches:
 
 stages:
   - test
-  - name: deploy
-    if: tag IS present AND branch = master
+  - deploy
 
 install:
   - python -m pip install --upgrade pip
