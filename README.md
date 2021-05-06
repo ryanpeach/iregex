@@ -1,5 +1,7 @@
 # Py Idiomatic Regex (AKA iregex)
 
+![TravisCI Build Status](https://travis-ci.com/ryanpeach/py_idiomatic_regex.svg?branch=master)
+
 An easier way to write regex in Python using OOP instead of strings.
 
 Makes the code much easier to read and understand while still using Regex under the hood.
