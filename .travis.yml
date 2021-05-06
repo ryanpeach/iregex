@@ -11,7 +11,7 @@ stages:
   - name: deploy
     if: tag IS present
 
-before_install:
+install:
   - python -m pip install --upgrade pip
   - python -m pip install poetry
   - poetry install --no-root -v
