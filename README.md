@@ -23,7 +23,7 @@ In this library the code would be:
 ```python
 from py_idiomatic_regex import *
 Regex(ALPHA).literal(
-    Regex().any_char("_", ALPHA_NUMERIC).zero_or_more_repititions()
+    Regex().any_char("_", ALPHA_NUMERIC).zero_or_more_repetitions()
 )
 ```
 

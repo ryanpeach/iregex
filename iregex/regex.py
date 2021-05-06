@@ -142,7 +142,7 @@ class Regex:
         return out
 
     # ============== Result Methods =============
-    def compile(self) -> re.Pattern:  # type: ignore
+    def compile(self) -> re.Pattern:
         """A simple wrapper around re.compile"""
         return re.compile(str(self))
 

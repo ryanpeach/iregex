@@ -5,7 +5,7 @@ description = "An idiomatic regex generator using OOP principals instead of long
 authors = ["Ryan <ryanpeach@icloud.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.7"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
