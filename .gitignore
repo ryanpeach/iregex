@@ -1,3 +1,6 @@
+# Sphinx
+_build
+
 # Poetry
 poetry.lock
 

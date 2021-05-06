@@ -1,0 +1,51 @@
+python:
+  - "3.6"      # current default Python on Travis CI
+  - "3.7"
+  - "3.8"
+  - "3.9"
+  - "3.9-dev"  # 3.9 development branch
+  - "nightly"  # nightly build
+stages:
+  - test
+  - name: deploy
+    if: tag IS present
+  - name: docs
+    if: tag IS present
+
+before_install:
+  - pip install --upgrade pip
+  - pip install poetry
+  - poetry install --no-root -v
+
+jobs:
+  include:
+    - stage: test
+      script: poetry run pytest
+      after_success:
+        - poetry run codecov
+    - script: poetry run mypy
+    - stage: deploy
+      script: skip
+      before_deploy:
+        - poetry config http-basic.pypi $PYPI_USERNAME $PYPI_PASSWORD
+      deploy:
+        provider: script
+        script: poetry publish --build
+        on:
+          tags: true
+          repo: ryanpeach/py_idiomatic_regex
+
+    - stage: docs
+      script: skip
+      before_deploy:
+        - poetry run make html
+        - touch _build/html/.nojekyll
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        github_token: $GITHUB_TOKEN
+        keep-history: true
+        local_dir: _build/html
+        on:
+          tags: true
+          repo: ryanpeach/py_idiomatic_regex

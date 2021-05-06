@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "py_idiomatic_regex"
+name = "iregex"
 version = "0.1.0"
-description = ""
+description = "An idiomatic regex generator using OOP principals instead of long unreadable strings."
 authors = ["Ryan <ryanpeach@icloud.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
@@ -14,6 +14,9 @@ flake8 = "^3.9.1"
 mypy = "^0.812"
 black = "^21.5b0"
 isort = "^5.8.0"
+coverage = "^5.5"
+Sphinx = "^3.5.4"
+codecov = "^2.1.11"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

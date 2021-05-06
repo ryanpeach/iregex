@@ -1,4 +1,4 @@
-# Py Idiomatic Regex
+# Py Idiomatic Regex (AKA iregex)
 
 An easier way to write regex in Python using OOP instead of strings.
 
@@ -30,3 +30,9 @@ You chain methods together for sequential operations and nest literals for neste
 # Contributions
 
 Please make a contribution, this library is still growing!
+
+Please download [poetry](https://python-poetry.org/) and run `poetry install` to set up your build environment.
+
+Please run `pre-commit install` to comply with git pre-commit standards.
+
+Always `pytest` your code.
