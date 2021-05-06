@@ -9,24 +9,25 @@ stages:
   - test
   - name: deploy
     if: tag IS present
-  - name: docs
-    if: tag IS present
 
 before_install:
-  - pip3 install --upgrade pip
-  - pip3 install poetry
+  - python -m pip install --upgrade pip
+  - python -m pip install poetry
   - poetry install --no-root -v
 
 jobs:
   include:
     - stage: test
-      script: poetry run pytest
+      script: poetry run coverage run pytest iregex
       after_success:
         - poetry run codecov
-    - script: poetry run mypy
+    - script: poetry run mypy iregex
+    - script: poetry run flake8 iregex
+
     - stage: deploy
       script: skip
       before_deploy:
+        - poetry config repositories.mypypi http://mypypi.example.com/simple
         - poetry config http-basic.pypi $PYPI_USERNAME $PYPI_PASSWORD
       deploy:
         provider: script
@@ -34,9 +35,7 @@ jobs:
         on:
           tags: true
           repo: ryanpeach/py_idiomatic_regex
-
-    - stage: docs
-      script: skip
+    - script: skip
       before_deploy:
         - poetry run make html
         - touch _build/html/.nojekyll
