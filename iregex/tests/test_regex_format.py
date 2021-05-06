@@ -138,9 +138,9 @@ def test_make_negative_lookbehind() -> None:
 @pytest.mark.parametrize(
     "self,other,result",
     [
-        (Regex(NUMERIC), Regex(NUMERIC), Regex(NUMERIC).literal(NUMERIC)),
-        (Regex(NUMERIC), NUMERIC, Regex(NUMERIC).literal(NUMERIC)),
-        (NUMERIC, Regex(NUMERIC), Regex(NUMERIC).literal(NUMERIC)),
+        (Regex(ALPHA), Regex(NUMERIC), Regex(ALPHA).literal(NUMERIC)),
+        (Regex(ALPHA), NUMERIC, Regex(ALPHA).literal(NUMERIC)),
+        (ALPHA, Regex(NUMERIC), Regex(ALPHA).literal(NUMERIC)),
         (
             Regex(NUMERIC).make_named_capture_group("name1"),
             Regex(ALPHA).make_named_capture_group("name2"),
@@ -171,9 +171,9 @@ def test_add_set_intersection_error(self: Regex, other: Regex) -> None:
 @pytest.mark.parametrize(
     "self,other,result",
     [
-        (Regex(NUMERIC), Regex(NUMERIC), f"(?:{NUMERIC}|{NUMERIC})"),
-        (Regex(NUMERIC), NUMERIC, f"(?:{NUMERIC}|{NUMERIC})"),
-        (NUMERIC, Regex(NUMERIC), f"(?:{NUMERIC}|{NUMERIC})"),
+        (Regex(ALPHA), Regex(NUMERIC), f"(?:{ALPHA}|{NUMERIC})"),
+        (Regex(ALPHA), NUMERIC, f"(?:{ALPHA}|{NUMERIC})"),
+        (ALPHA, Regex(NUMERIC), f"(?:{ALPHA}|{NUMERIC})"),
     ],
 )
 def test_or(self: Regex, other: Regex, result: Regex) -> None:
