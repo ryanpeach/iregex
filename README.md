@@ -28,6 +28,13 @@ The regex for this would be:
 
 `[a-zA-Z][_\w]*`
 
+And in python you would compile this like so:
+
+```python
+import re
+re.compile(r"[a-zA-Z][_\w]*")
+```
+
 In this library the code would be:
 
 ```python
@@ -35,7 +42,7 @@ from iregex import Regex
 from iregex.consts import ALPHA, ALPHA_NUMERIC
 Regex(ALPHA).literal(
     Regex().any_char("_", ALPHA_NUMERIC).zero_or_more_repetitions()
-)
+).compile()
 ```
 
 Just take a look at the documentation for the `Regex` class to get an idea of all the methods you can use!
