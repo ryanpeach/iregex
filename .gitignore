@@ -1,9 +1,6 @@
 # IDEs
 .idea
 
-# Sphinx
-_build
-
 # Poetry
 poetry.lock
 
@@ -76,9 +73,6 @@ instance/
 
 # Scrapy stuff:
 .scrapy
-
-# Sphinx documentation
-docs/_build/
 
 # PyBuilder
 .pybuilder/
