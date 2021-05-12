@@ -44,11 +44,14 @@ jobs:
     - script:
         - poetry run make github
       deploy:
-        provider: pages
-        cleanup: false
-        github_token: $GITHUB_TOKEN
-        keep-history: true
-        local_dir: docs
+        provider: script
+        script:
+          - git config --global user.email "travis@travis-ci.org"
+          - git config --global user.name "Travis CI"
+          - git add docs
+          - git commit --message "Travis documentation build: $TRAVIS_BUILD_NUMBER"
+          - git remote add origin https://${GITHUB_TOKEN}@github.com/ryanpeach/py_idiomatic_regex.git > /dev/null 2>&1
+          - git push --quiet --set-upstream origin master
         on:
           tags: true
           repo: ryanpeach/py_idiomatic_regex
