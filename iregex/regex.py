@@ -128,7 +128,10 @@ class Regex:
         for t in char:
             if not Regex._is_character(t):
                 raise NotACharacterException(f"{t} is not a character.")
-        out._data += ["["] + list(char) + ["]"]
+        if len(char) > 1:
+            out._data += ["["] + list(char) + ["]"]
+        else:
+            out._data = list(char)
         return out
 
     def exclude_char(self, *char: str) -> "Regex":
