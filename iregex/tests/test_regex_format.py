@@ -1,3 +1,7 @@
+"""
+Tests Regex class by testing output string representation.
+"""
+
 from typing import Callable
 
 import pytest

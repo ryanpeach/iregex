@@ -1,3 +1,7 @@
+"""
+Tests Regex class by testing the regex match results on given strings.
+"""
+
 import pytest
 
 from iregex import Regex
