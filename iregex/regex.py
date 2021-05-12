@@ -1,20 +1,32 @@
+"""
+This is the module containing the main Regex class.
+"""
+
 import re
 from copy import copy
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Any
 
-from iregex.consts import ANY, ONE_OR_MORE, OPTIONAL, WHITESPACE, ZERO_OR_MORE
-from iregex.exceptions import NonEmptyError, SetIntersectionError
+from iregex.consts import ANY, ONE_OR_MORE, OPTIONAL, WHITESPACE, ZERO_OR_MORE, NEWLINE
+from iregex.exceptions import NonEmptyError, SetIntersectionError, NotACharacterException
 
 
 class Regex:
-    """A wrapper for regex strings that hides the implementation."""
+    """
+    A wrapper for regex strings that hides the implementation.
+
+    This class is immutable by convention.
+    """
 
     # Private Variables
     _data: List[str]
     _capture_groups: List[str]
 
     def __init__(self, regex_str: Optional[str] = None) -> None:
-        """Optionally can take a literal as input."""
+        """
+        Optionally can take a literal as input.
+
+        :param regex_str: An optional literal to start your Regex with.
+        """
         self._data = [regex_str] if regex_str else []
         self._capture_groups = []
 
@@ -22,6 +34,8 @@ class Regex:
     def literal(self, regex: Union[str, "Regex"]) -> "Regex":
         """
         Adds a literal to the end of the regex.
+
+        :param regex: The regex to append to this regex.
         :raises TypeError: When regex is not type Regex or str.
         """
         out = copy(self)
@@ -43,6 +57,12 @@ class Regex:
         out._data.append(WHITESPACE + ZERO_OR_MORE)
         return out
 
+    def newline(self) -> "Regex":
+        """Allows newline."""
+        out = copy(self)
+        out._data.append(NEWLINE + ZERO_OR_MORE)
+        return out
+
     def zero_or_more_repetitions(self) -> "Regex":
         """Repeats the previous regex zero or more times."""
         out = self.make_non_capture_group()
@@ -56,13 +76,22 @@ class Regex:
         return out
 
     def m_to_n_repetitions(self, m: int, n: int) -> "Regex":
-        """Repeats the previous regex m to n inclusive times."""
+        """
+        Repeats the previous regex m to n inclusive times.
+
+        :param m: At least this many times.
+        :param n: At most this many times (inclusive).
+        """
         out = self.make_non_capture_group()
         out._data.append("{" + str(m) + "," + str(n) + "}")
         return out
 
     def exactly_m_repetitions(self, m: int) -> "Regex":
-        """Repeats the previous regex exactly m times."""
+        """
+        Repeats the previous regex exactly m times.
+
+        :param m: Exactly this many instances.
+        """
         out = self.make_non_capture_group()
         out._data.append("{" + str(m) + "}")
         return out
@@ -70,6 +99,8 @@ class Regex:
     def m_or_more_repetitions(self, m: int) -> "Regex":
         """
         Repeats the previous regex m or more times.
+
+        :param m: This many or more instances.
         :raises ValueError: When m < 0
         """
         if m == 0:
@@ -86,16 +117,32 @@ class Regex:
         out._data.append(OPTIONAL)
         return out
 
-    def any_char(self, *text: str) -> "Regex":
-        """Any char in the text may be used."""
+    def any_char(self, *char: str) -> "Regex":
+        """
+        Any char in the text may be used.
+
+        :param char: Some character.
+        :raises NotACharacterException: Raised if any argument is not a character.
+        """
         out = copy(self)
-        out._data += ["["] + list(text) + ["]"]
+        for t in char:
+            if not Regex._is_character(t):
+                raise NotACharacterException(f"{t} is not a character.")
+        out._data += ["["] + list(char) + ["]"]
         return out
 
-    def exclude_char(self, *text: str) -> "Regex":
-        """None of the chars in the text may be used."""
+    def exclude_char(self, *char: str) -> "Regex":
+        """
+        None of the chars in the text may be used.
+
+        :param char: Some character.
+        :raises NotACharacterException: Raised if any argument is not a character.
+        """
         out = copy(self)
-        out._data += ["[^"] + list(text) + ["]"]
+        for t in char:
+            if not Regex._is_character(t):
+                raise NotACharacterException(f"{t} is not a character.")
+        out._data += ["[^"] + list(char) + ["]"]
         return out
 
     def make_capture_group(self) -> "Regex":
@@ -104,14 +151,50 @@ class Regex:
         out._data = ["("] + out._data + [")"]
         return out
 
+    @staticmethod
+    def _is_character(txt: Union[str, "Regex"]) -> bool:
+        """Tests if a regex string is just a single character."""
+        txt_: str = str(txt) if isinstance(txt, Regex) else txt
+        if len(txt_) == 1:
+            return True
+        if len(txt_) == 2 and txt_[0] == '\\':
+            return True
+        return False
+
+    @staticmethod
+    def _is_character_group(txt: Union[str, "Regex"]) -> bool:
+        """Tests if a regex string is a character group."""
+        txt_: str = str(txt) if isinstance(txt, Regex) else txt
+        if len(txt_) >= 2 and txt_[0] == r'[' and txt_[-1] == r']':
+            return True
+        return False
+
+    @staticmethod
+    def _is_capture_group(txt: Union[str, "Regex"]) -> bool:
+        """Tests if a regex string is a capture group."""
+        txt_: str = str(txt) if isinstance(txt, Regex) else txt
+        if len(txt_) >= 2 and txt_[0] == r'(' and txt_[-1] == r')':
+            return True
+        return False
+
     def make_non_capture_group(self) -> "Regex":
         """Create a capture group that you don't care to retreive the contents of."""
         out = copy(self)
-        out._data = ["(?:"] + out._data + [")"]
+        # You don't need to make a non_capture_group for simple cases
+        if Regex._is_character(self) or \
+                Regex._is_character_group(self) or \
+                Regex._is_capture_group(self):
+            out._data = out._data
+        else:
+            out._data = ["(?:"] + out._data + [")"]
         return out
 
     def make_named_capture_group(self, name: str) -> "Regex":
-        """Makes the previous regex a capture group of name `name`."""
+        """
+        Makes the previous regex a capture group of name `name`.
+
+        :param name: The name to assign the capture group.
+        """
         out = copy(self)
         out._data = ["(?<" + name + ">"] + out._data + [")"]
         out._capture_groups.append(name)
@@ -142,9 +225,14 @@ class Regex:
         return out
 
     # ============== Result Methods =============
-    def compile(self) -> re.Pattern:
-        """A simple wrapper around re.compile"""
-        return re.compile(str(self))
+    def compile(self, *args: Any, **kwargs: Any) -> re.Pattern:
+        """
+        A simple wrapper around re.compile.
+
+        :param args: Positional parameters to pass to re.compile.
+        :param kwargs: Keyword parameters to pass to re.compile.
+        """
+        return re.compile(str(self), *args, **kwargs)
 
     # ============== Magic Methods ==============
     def __copy__(self) -> "Regex":
@@ -224,6 +312,7 @@ class Regex:
         """
         The `or` of two Regex's is the group `(self|other)`.
         Neither self nor other may contained named capture groups.
+
         :raises NonEmptyError: If either contains named capture groups.
         """
         # Handle data types
@@ -254,6 +343,7 @@ class Regex:
         """
         The `or` of two Regex's is the group `(self|other)`.
         Neither self nor other may contained named capture groups.
+
         :raises NonEmptyError: If either contains named capture groups.
         """
         # Handle data types
