@@ -45,16 +45,18 @@ jobs:
         - poetry install -v
       script:
         - poetry run make github
+      before_deploy:
+        - git config --global user.email "travis@travis-ci.org"
+        - git config --global user.name "Travis CI"
+        - git checkout -b docs
+        - git add docs/
+        - git commit --message "Travis documentation build: $TRAVIS_BUILD_NUMBER"
+        - git remote add origin-pages https://${GITHUB_TOKEN}@github.com/ryanpeach/py_idiomatic_regex.git > /dev/null 2>&1
+
       deploy:
         provider: script
-        script:
-          - git config --global user.email "travis@travis-ci.org"
-          - git config --global user.name "Travis CI"
-          - git checkout -b docs
-          - git add docs/
-          - git commit --message "Travis documentation build: $TRAVIS_BUILD_NUMBER"
-          - git remote add origin-pages https://${GITHUB_TOKEN}@github.com/ryanpeach/py_idiomatic_regex.git > /dev/null 2>&1
-          - git push --quiet --set-upstream origin-pages docs
+        skip_cleanup: true
+        script: git push --quiet --set-upstream origin-pages docs
         on:
           tags: true
           repo: ryanpeach/py_idiomatic_regex
