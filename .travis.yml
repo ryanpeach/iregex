@@ -41,16 +41,16 @@ jobs:
           tags: true
           repo: ryanpeach/py_idiomatic_regex
           branch: master
-    - script: skip
-      before_deploy:
-        - poetry run make html
+    - script:
+        - cd docs
+        - PYTHONPATH=../ poetry run make html
         - touch _build/html/.nojekyll
       deploy:
         provider: pages
         cleanup: false
         github_token: $GITHUB_TOKEN
         keep-history: true
-        local_dir: _build/html
+        local_dir: docs/_build/html
         on:
           tags: true
           repo: ryanpeach/py_idiomatic_regex

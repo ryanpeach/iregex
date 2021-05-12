@@ -30,7 +30,8 @@ release = "2021"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions: list = []
+extensions: list = ['sphinx.ext.autodoc', 'm2r2', 'sphinx.ext.doctest', 'sphinx_autodoc_typehints']
+source_suffix = ['.rst', '.md']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -40,6 +41,9 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
+# REF: https://stackoverflow.com/questions/18969093/how-to-include-the-toctree-in-the-sidebar-of-each-page
+# html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'] }
+always_document_param_types = True
 
 # -- Options for HTML output -------------------------------------------------
 

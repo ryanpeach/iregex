@@ -1,3 +1,9 @@
+"""
+Tests Regex class by testing output string representation.
+"""
+
+from typing import Callable
+
 import pytest
 
 from iregex import Regex
@@ -6,11 +12,11 @@ from iregex.consts import (
     ANY,
     NUMERIC,
     ONE_OR_MORE,
-    OPTIONAL,
+    NEWLINE,
     WHITESPACE,
     ZERO_OR_MORE,
 )
-from iregex.exceptions import NonEmptyError, SetIntersectionError
+from iregex.exceptions import NonEmptyError, SetIntersectionError, NotACharacterException
 
 
 def test_regex_literal() -> None:
@@ -19,70 +25,150 @@ def test_regex_literal() -> None:
     assert str(regex) == NUMERIC + ALPHA
 
 
-def test_whitespace() -> None:
+@pytest.mark.parametrize(
+    "regex,result",
+    [
+        (Regex(NUMERIC).whitespace(), NUMERIC + WHITESPACE + ZERO_OR_MORE),
+        (Regex(NUMERIC+ALPHA).whitespace(), NUMERIC + ALPHA + WHITESPACE + ZERO_OR_MORE),
+    ],
+)
+def test_whitespace(regex: Regex, result: str) -> None:
     """Test basic whitespace addition."""
-    regex = Regex(NUMERIC).whitespace()
-    assert str(regex) == NUMERIC + WHITESPACE + ZERO_OR_MORE
+    assert str(regex) == result
 
 
-def test_zero_or_more_repetitions() -> None:
+@pytest.mark.parametrize(
+    "regex,result",
+    [
+        (Regex(NUMERIC).newline(), NUMERIC + NEWLINE + ZERO_OR_MORE),
+        (Regex(NUMERIC+ALPHA).newline(), NUMERIC + ALPHA + NEWLINE + ZERO_OR_MORE),
+    ],
+)
+def test_newline(regex: Regex, result: str) -> None:
+    """Test basic newline addition."""
+    assert str(regex) == result
+
+
+@pytest.mark.parametrize(
+    "regex,result",
+    [
+        (Regex(NUMERIC).zero_or_more_repetitions(), f"{NUMERIC}" + ZERO_OR_MORE),
+        (Regex(NUMERIC+ALPHA).zero_or_more_repetitions(), f"(?:{NUMERIC+ALPHA})" + ZERO_OR_MORE),
+    ],
+)
+def test_zero_or_more_repetitions(regex: Regex, result: str) -> None:
     """Test basic repetitions."""
-    regex = Regex(NUMERIC).zero_or_more_repetitions()
-    assert str(regex) == f"(?:{NUMERIC})" + ZERO_OR_MORE
+    assert str(regex) == result
 
 
-def test_one_or_more_repetitions() -> None:
+@pytest.mark.parametrize(
+    "regex,result",
+    [
+        (Regex(NUMERIC).one_or_more_repetitions(), f"{NUMERIC}" + ONE_OR_MORE),
+        (Regex(NUMERIC+ALPHA).one_or_more_repetitions(), f"(?:{NUMERIC+ALPHA})" + ONE_OR_MORE),
+    ],
+)
+def test_one_or_more_repetitions(regex: Regex, result: str) -> None:
     """Test basic repetitions."""
-    regex = Regex(NUMERIC).one_or_more_repetitions()
-    assert str(regex) == f"(?:{NUMERIC})" + ONE_OR_MORE
+    assert str(regex) == result
 
 
-def test_m_to_n_repetitions() -> None:
+@pytest.mark.parametrize(
+    "regex,result",
+    [
+        (Regex(NUMERIC).m_to_n_repetitions(3, 5), f"{NUMERIC}" + "{3,5}"),
+        (Regex(NUMERIC+ALPHA).m_to_n_repetitions(3, 5), f"(?:{NUMERIC+ALPHA})" + "{3,5}"),
+    ],
+)
+def test_m_to_n_repetitions(regex: Regex, result: str) -> None:
     """Test basic repetitions."""
-    regex = Regex(NUMERIC).m_to_n_repetitions(3, 5)
-    assert str(regex) == f"(?:{NUMERIC})" + r"{3,5}"
+    assert str(regex) == result
 
 
-def test_exactly_m_repetitions() -> None:
+@pytest.mark.parametrize(
+    "regex,result",
+    [
+        (Regex(NUMERIC).exactly_m_repetitions(3), f"{NUMERIC}" + "{3}"),
+        (Regex(NUMERIC+ALPHA).exactly_m_repetitions(3), f"(?:{NUMERIC+ALPHA})" + "{3}"),
+    ],
+)
+def test_exactly_m_repetitions(regex: Regex, result: str) -> None:
     """Test basic repetitions."""
-    regex = Regex(NUMERIC).exactly_m_repetitions(3)
-    assert str(regex) == f"(?:{NUMERIC})" + r"{3}"
+    assert str(regex) == result
 
 
-def test_m_or_more_repetitions() -> None:
+@pytest.mark.parametrize(
+    "regex,result",
+    [
+        (Regex(NUMERIC).m_or_more_repetitions(3), f"{NUMERIC}" + "{2}" + f"{NUMERIC}" + ONE_OR_MORE),
+        (Regex(NUMERIC+ALPHA).m_or_more_repetitions(3), f"(?:{NUMERIC+ALPHA})" + "{2}" + f"(?:{NUMERIC+ALPHA})" + ONE_OR_MORE),
+    ],
+)
+def test_m_or_more_repetitions(regex: Regex, result: str) -> None:
     """Test basic repetitions."""
-    regex = Regex(NUMERIC).m_or_more_repetitions(3)
-    assert str(regex) == f"(?:{NUMERIC})" + r"{2}" + f"(?:{NUMERIC})" + ONE_OR_MORE
+    assert str(regex) == result
 
 
-def test_optional() -> None:
+@pytest.mark.parametrize(
+    "regex,result",
+    [
+        (Regex(NUMERIC).optional(), f"{NUMERIC}?"),
+        (Regex(NUMERIC+ALPHA).optional(), f"(?:{NUMERIC+ALPHA})?"),
+    ],
+)
+def test_optional(regex: Regex, result: str) -> None:
     """Test basic optional."""
-    regex = Regex(NUMERIC).optional()
-    assert str(regex) == f"(?:{NUMERIC})" + OPTIONAL
+    assert str(regex) == result
 
 
-def test_any_char1() -> None:
+@pytest.mark.parametrize(
+    "regex,result",
+    [
+        (Regex().any_char("a"), f"a"),
+        (Regex().any_char("a", "b"), f"[ab]"),
+    ],
+)
+def test_any_char(regex: Regex, result: str) -> None:
     """Test basic any_char."""
-    regex = Regex(NUMERIC).any_char("asdf")
-    assert str(regex) == f"{NUMERIC}[asdf]"
+    assert str(regex) == result
 
 
-def test_any_char2() -> None:
+@pytest.mark.parametrize(
+    "regex_lazy",
+    [
+        lambda: Regex().any_char("ab"),
+        lambda: Regex().any_char("a", "bc"),
+    ],
+)
+def test_any_char_error(regex_lazy: Callable) -> None:
     """Test basic any_char."""
-    regex = Regex(NUMERIC).any_char("a", "s", "d", "f")
-    assert str(regex) == f"{NUMERIC}[asdf]"
+    with pytest.raises(NotACharacterException):
+        regex_lazy()
 
 
-def test_exclude_char1() -> None:
+@pytest.mark.parametrize(
+    "regex,result",
+    [
+        (Regex().exclude_char("a"), f"[^a]"),
+        (Regex().exclude_char("a", "b"), f"[^ab]"),
+    ],
+)
+def test_exclude_char(regex: Regex, result: str) -> None:
     """Test basic exclude_char."""
-    regex = Regex(NUMERIC).exclude_char("asdf")
-    assert str(regex) == f"{NUMERIC}[^asdf]"
+    assert str(regex) == result
 
 
-def test_exclude_char2() -> None:
+@pytest.mark.parametrize(
+    "regex_lazy",
+    [
+        lambda: Regex().exclude_char("ab"),
+        lambda: Regex().exclude_char("a", "bc"),
+    ],
+)
+def test_exclude_char_error(regex_lazy: Callable) -> None:
     """Test basic exclude_char."""
-    regex = Regex(NUMERIC).exclude_char("a", "s", "d", "f")
-    assert str(regex) == f"{NUMERIC}[^asdf]"
+    with pytest.raises(NotACharacterException):
+        regex_lazy()
 
 
 def test_anything() -> None:
