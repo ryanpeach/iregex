@@ -8,7 +8,7 @@ from iregex.consts import (
     ANY,
     NUMERIC,
     ONE_OR_MORE,
-    OPTIONAL,
+    NEWLINE,
     WHITESPACE,
     ZERO_OR_MORE,
 )
@@ -20,6 +20,7 @@ def test_regex_literal() -> None:
     regex = Regex(NUMERIC).literal(ALPHA)
     assert str(regex) == NUMERIC + ALPHA
 
+
 @pytest.mark.parametrize(
     "regex,result",
     [
@@ -29,6 +30,18 @@ def test_regex_literal() -> None:
 )
 def test_whitespace(regex: Regex, result: str) -> None:
     """Test basic whitespace addition."""
+    assert str(regex) == result
+
+
+@pytest.mark.parametrize(
+    "regex,result",
+    [
+        (Regex(NUMERIC).newline(), NUMERIC + NEWLINE + ZERO_OR_MORE),
+        (Regex(NUMERIC+ALPHA).newline(), NUMERIC + ALPHA + NEWLINE + ZERO_OR_MORE),
+    ],
+)
+def test_newline(regex: Regex, result: str) -> None:
+    """Test basic newline addition."""
     assert str(regex) == result
 
 

@@ -27,6 +27,20 @@ def test_whitespace_results(text: str, expected: bool) -> None:
 
 
 @pytest.mark.parametrize(
+    "text,expected", [("1\n", True),
+                      ("1\n\r", True),
+                      ("1\r", True)]
+)
+def test_whitespace_results(text: str, expected: bool) -> None:
+    """Test basic newline addition."""
+    regex = Regex(NUMERIC).newline().compile()
+    if expected:
+        assert regex.fullmatch(text)
+    else:
+        assert not regex.fullmatch(text)
+
+
+@pytest.mark.parametrize(
     "text,expected", [("", True), ("1", True), ("12", True), ("1a", False)]
 )
 def test_zero_or_more_repetitions_results(text: str, expected: bool) -> None:
