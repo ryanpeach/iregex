@@ -50,7 +50,7 @@ jobs:
         cleanup: false
         github_token: $GITHUB_TOKEN
         keep-history: true
-        local_dir: _build/html
+        local_dir: docs/_build/html
         on:
           tags: true
           repo: ryanpeach/py_idiomatic_regex
