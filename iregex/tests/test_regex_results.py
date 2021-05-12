@@ -31,7 +31,7 @@ def test_whitespace_results(text: str, expected: bool) -> None:
                       ("1\n\r", True),
                       ("1\r", True)]
 )
-def test_whitespace_results(text: str, expected: bool) -> None:
+def test_newline_results(text: str, expected: bool) -> None:
     """Test basic newline addition."""
     regex = Regex(NUMERIC).newline().compile()
     if expected:
