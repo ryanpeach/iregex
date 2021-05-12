@@ -30,8 +30,13 @@ release = "2021"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions: list = ['sphinx.ext.autodoc', 'm2r2', 'sphinx.ext.doctest', 'sphinx_autodoc_typehints']
-source_suffix = ['.rst', '.md']
+extensions: list = [
+    "sphinx.ext.autodoc",
+    "m2r2",
+    "sphinx.ext.doctest",
+    "sphinx_autodoc_typehints",
+]
+source_suffix = [".rst", ".md"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
