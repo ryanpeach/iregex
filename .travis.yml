@@ -41,8 +41,7 @@ jobs:
           tags: true
           repo: ryanpeach/py_idiomatic_regex
           branch: master
-    - script: skip
-      before_deploy:
+    - script:
         - cd docs
         - PYTHONPATH=../ poetry run make html
         - touch _build/html/.nojekyll
