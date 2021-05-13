@@ -4,10 +4,14 @@ This is the module containing the main Regex class.
 
 import re
 from copy import copy
-from typing import List, Optional, Union, Any
+from typing import Any, List, Optional, Union
 
-from iregex.consts import ANY, ONE_OR_MORE, OPTIONAL, WHITESPACE, ZERO_OR_MORE, NEWLINE
-from iregex.exceptions import NonEmptyError, SetIntersectionError, NotACharacterException
+from iregex.consts import ANY, NEWLINE, ONE_OR_MORE, OPTIONAL, WHITESPACE, ZERO_OR_MORE
+from iregex.exceptions import (
+    NonEmptyError,
+    NotACharacterException,
+    SetIntersectionError,
+)
 
 
 class Regex:
@@ -25,6 +29,18 @@ class Regex:
         """
         Optionally can take a literal as input.
 
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex()
+            Regex()
+
+            >>> Regex("asdf")
+            Regex(r"asdf")
+
         :param regex_str: An optional literal to start your Regex with.
         """
         self._data = [regex_str] if regex_str else []
@@ -33,44 +49,149 @@ class Regex:
     # ============== Chained Methods ==============
     def literal(self, regex: Union[str, "Regex"]) -> "Regex":
         """
-        Adds a literal to the end of the regex.
+        Adds a literal to the end of the regex. Also aliases to `+`.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("hello").literal(' ').literal('world')
+            Regex(r"hello world")
+
+            >>> Regex("hello") + ' ' + 'world'
+            Regex(r"hello world")
+
+            >>> "hello" + ' ' + Regex('world')
+            Regex(r"hello world")
 
         :param regex: The regex to append to this regex.
-        :raises TypeError: When regex is not type Regex or str.
+        :raises SetIntersectionError: If the two _capture_groups share any values.
+        :raises TypeError: If other is not either a Regex or a string.
         """
-        out = copy(self)
-        if isinstance(regex, Regex):
-            out._data += regex._data
-        elif isinstance(regex, str):
-            out._data.append(regex)
-        else:
-            raise TypeError(f"Type not supported: {type(regex)}")
-        return out
+        return self + regex
+
+    def logical_or(self, regex: Union[str, "Regex"]) -> "Regex":
+        """
+        The `or` of two Regex's is the group `(self|other)`.
+        Neither self nor other may contained named capture groups.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("hello").logical_or('world')
+            Regex(r"(?:hello|world)")
+
+            >>> Regex("hello") | 'world'
+            Regex(r"(?:hello|world)")
+
+            >>> "hello" | Regex('world')
+            Regex(r"(?:hello|world)")
+
+        :raises NonEmptyError: If either contains named capture groups.
+        """
+        return self | regex
 
     def anything(self) -> "Regex":
-        """Appends zero or more of any character to the Regex."""
+        """
+        Appends zero or more of any character to the Regex.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("hello").anything().literal("world")
+            Regex(r"hello.*world")
+
+        """
         return self.literal(ANY + ZERO_OR_MORE)
 
     def whitespace(self) -> "Regex":
-        """Allows unlimited whitespace."""
+        r"""
+        Allows unlimited whitespace.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("hello").whitespace().literal("world")
+            Regex(r"hello\s*world")
+
+        """
         out = copy(self)
         out._data.append(WHITESPACE + ZERO_OR_MORE)
         return out
 
     def newline(self) -> "Regex":
-        """Allows newline."""
+        r"""
+        Allows newline after text.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("hello").newline().literal("world")
+            Regex(r"hello(?:\n|\r\n?)*world")
+
+        """
         out = copy(self)
         out._data.append(NEWLINE + ZERO_OR_MORE)
         return out
 
     def zero_or_more_repetitions(self) -> "Regex":
-        """Repeats the previous regex zero or more times."""
+        """
+        Repeats the previous regex zero or more times.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("a").zero_or_more_repetitions()
+            Regex(r"a*")
+
+            >>> Regex("[asdf]").zero_or_more_repetitions()
+            Regex(r"[asdf]*")
+
+            >>> Regex("hello world").zero_or_more_repetitions()
+            Regex(r"(?:hello world)*")
+
+        """
         out = self.make_non_capture_group()
         out._data.append(ZERO_OR_MORE)
         return out
 
     def one_or_more_repetitions(self) -> "Regex":
-        """Repeats the previous regex one or more times."""
+        """
+        Repeats the previous regex one or more times.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("a").one_or_more_repetitions()
+            Regex(r"a+")
+
+            >>> Regex("[asdf]").one_or_more_repetitions()
+            Regex(r"[asdf]+")
+
+            >>> Regex("hello world").one_or_more_repetitions()
+            Regex(r"(?:hello world)+")
+
+        """
         out = self.make_non_capture_group()
         out._data.append(ONE_OR_MORE)
         return out
@@ -79,16 +200,52 @@ class Regex:
         """
         Repeats the previous regex m to n inclusive times.
 
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("a").m_to_n_repetitions(0, 1)
+            Regex(r"a?")
+
+            >>> Regex("a").m_to_n_repetitions(3, 5)
+            Regex(r"a{3,5}")
+
+            >>> Regex("[asdf]").m_to_n_repetitions(3, 5)
+            Regex(r"[asdf]{3,5}")
+
+            >>> Regex("hello world").m_to_n_repetitions(3, 5)
+            Regex(r"(?:hello world){3,5}")
+
         :param m: At least this many times.
         :param n: At most this many times (inclusive).
         """
         out = self.make_non_capture_group()
-        out._data.append("{" + str(m) + "," + str(n) + "}")
+        if m == 0 and n == 1:
+            out._data.append(OPTIONAL)
+        else:
+            out._data.append("{" + str(m) + "," + str(n) + "}")
         return out
 
     def exactly_m_repetitions(self, m: int) -> "Regex":
         """
         Repeats the previous regex exactly m times.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("a").exactly_m_repetitions(3)
+            Regex(r"a{3}")
+
+            >>> Regex("[asdf]").exactly_m_repetitions(3)
+            Regex(r"[asdf]{3}")
+
+            >>> Regex("hello world").exactly_m_repetitions(3)
+            Regex(r"(?:hello world){3}")
 
         :param m: Exactly this many instances.
         """
@@ -99,6 +256,27 @@ class Regex:
     def m_or_more_repetitions(self, m: int) -> "Regex":
         """
         Repeats the previous regex m or more times.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("a").m_or_more_repetitions(0)
+            Regex(r"a*")
+
+            >>> Regex("a").m_or_more_repetitions(1)
+            Regex(r"a+")
+
+            >>> Regex("a").m_or_more_repetitions(3)
+            Regex(r"a{2}a+")
+
+            >>> Regex("[asdf]").m_or_more_repetitions(3)
+            Regex(r"[asdf]{2}[asdf]+")
+
+            >>> Regex("hello world").m_or_more_repetitions(3)
+            Regex(r"(?:hello world){2}(?:hello world)+")
 
         :param m: This many or more instances.
         :raises ValueError: When m < 0
@@ -112,14 +290,46 @@ class Regex:
         return self.exactly_m_repetitions(m - 1) + self.one_or_more_repetitions()
 
     def optional(self) -> "Regex":
-        """The previous regex can exist 0 or 1 times."""
+        """
+        The previous regex can exist 0 or 1 times.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("a").optional()
+            Regex(r"a?")
+
+            >>> Regex("[asdf]").optional()
+            Regex(r"[asdf]?")
+
+            >>> Regex("hello world").optional()
+            Regex(r"(?:hello world)?")
+
+        """
         out = self.make_non_capture_group()
         out._data.append(OPTIONAL)
         return out
 
     def any_char(self, *char: str) -> "Regex":
         """
-        Any char in the text may be used.
+        Any of the characters listed as parameters may be used.
+
+        Pass characters as parameters one at a time like so:
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex().any_char('a')
+            Regex(r"a")
+
+            >>> Regex("hello").any_char('w', 'o', 'r', 'l', 'd')
+            Regex(r"hello[world]")
 
         :param char: Some character.
         :raises NotACharacterException: Raised if any argument is not a character.
@@ -136,7 +346,18 @@ class Regex:
 
     def exclude_char(self, *char: str) -> "Regex":
         """
-        None of the chars in the text may be used.
+        None of the characters listed as parameters may be used.
+
+        Pass characters as parameters one at a time like so:
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("hello").exclude_char('w', 'o', 'r', 'l', 'd')
+            Regex(r"hello[^world]")
 
         :param char: Some character.
         :raises NotACharacterException: Raised if any argument is not a character.
@@ -149,7 +370,19 @@ class Regex:
         return out
 
     def make_capture_group(self) -> "Regex":
-        """Creates an anonymous capture group."""
+        """
+        Creates an anonymous capture group.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex(".*").make_capture_group().literal("world")
+            Regex(r"(.*)world")
+
+        """
         out = copy(self)
         out._data = ["("] + out._data + [")"]
         return out
@@ -160,7 +393,7 @@ class Regex:
         txt_: str = str(txt) if isinstance(txt, Regex) else txt
         if len(txt_) == 1:
             return True
-        if len(txt_) == 2 and txt_[0] == '\\':
+        if len(txt_) == 2 and txt_[0] == "\\":
             return True
         return False
 
@@ -168,7 +401,7 @@ class Regex:
     def _is_character_group(txt: Union[str, "Regex"]) -> bool:
         """Tests if a regex string is a character group."""
         txt_: str = str(txt) if isinstance(txt, Regex) else txt
-        if len(txt_) >= 2 and txt_[0] == r'[' and txt_[-1] == r']':
+        if len(txt_) >= 2 and txt_[0] == r"[" and txt_[-1] == r"]":
             return True
         return False
 
@@ -176,17 +409,40 @@ class Regex:
     def _is_capture_group(txt: Union[str, "Regex"]) -> bool:
         """Tests if a regex string is a capture group."""
         txt_: str = str(txt) if isinstance(txt, Regex) else txt
-        if len(txt_) >= 2 and txt_[0] == r'(' and txt_[-1] == r')':
+        if len(txt_) >= 2 and txt_[0] == r"(" and txt_[-1] == r")":
             return True
         return False
 
     def make_non_capture_group(self) -> "Regex":
-        """Create a capture group that you don't care to retreive the contents of."""
+        """
+        Intelligently creates a capture group that you don't care to retreive the contents of.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("h").make_non_capture_group()  # This is unnecessary so it fails
+            Regex(r"h")
+
+            >>> Regex("[asdf]").make_non_capture_group()  # This is unnecessary so it fails
+            Regex(r"[asdf]")
+
+            >>> Regex("(hello world)").make_non_capture_group()  # This is unnecessary so it fails
+            Regex(r"(hello world)")
+
+            >>> Regex("hello world").make_non_capture_group()  # This succeeds
+            Regex(r"(?:hello world)")
+
+        """
         out = copy(self)
         # You don't need to make a non_capture_group for simple cases
-        if Regex._is_character(self) or \
-                Regex._is_character_group(self) or \
-                Regex._is_capture_group(self):
+        if (
+            Regex._is_character(self)
+            or Regex._is_character_group(self)
+            or Regex._is_capture_group(self)
+        ):
             out._data = out._data
         else:
             out._data = ["(?:"] + out._data + [")"]
@@ -196,6 +452,15 @@ class Regex:
         """
         Makes the previous regex a capture group of name `name`.
 
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex(".*").make_named_capture_group("hello").literal("world")
+            Regex(r"(?<hello>.*)world")
+
         :param name: The name to assign the capture group.
         """
         out = copy(self)
@@ -204,25 +469,73 @@ class Regex:
         return out
 
     def make_lookahead(self) -> "Regex":
-        """Makes the previous regex a lookahead group."""
+        """
+        Makes the previous regex a lookahead group.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("hello") + (Regex("world").make_lookahead())
+            Regex(r"hello(?=world)")
+
+        """
         out = copy(self)
         out._data = ["(?="] + self._data + [")"]
         return out
 
     def make_lookbehind(self) -> "Regex":
-        """Makes the previous regex a lookbehind group."""
+        """
+        Makes the previous regex a lookbehind group.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("hello").make_lookbehind() + "world"
+            Regex(r"(?<=hello)world")
+
+        """
         out = copy(self)
         out._data = ["(?<="] + self._data + [")"]
         return out
 
     def make_negative_lookahead(self) -> "Regex":
-        """Makes the previous regex a negative lookahead group."""
+        """
+        Makes the previous regex a negative lookahead group.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("hello") + (Regex("world").make_negative_lookahead())
+            Regex(r"hello(?!world)")
+
+        """
         out = copy(self)
         out._data = ["(?!"] + self._data + [")"]
         return out
 
     def make_negative_lookbehind(self) -> "Regex":
-        """Makes the previous regex a negative lookbehind group."""
+        """
+        Makes the previous regex a negative lookbehind group.
+
+        .. testsetup::
+
+            from iregex import Regex
+
+        .. doctest::
+
+            >>> Regex("hello").make_negative_lookbehind() + "world"
+            Regex(r"(?<!hello)world")
+
+        """
         out = copy(self)
         out._data = ["(?<!"] + self._data + [")"]
         return out
@@ -251,7 +564,7 @@ class Regex:
 
     def __repr__(self) -> str:
         """For debugging and printing."""
-        return "Regex(" + str(self) + ")"
+        return 'Regex(r"' + str(self) + '")'
 
     def __eq__(self, other: "Regex") -> bool:  # type: ignore
         """Two Regex's are equal if their regex strings are equal."""

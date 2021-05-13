@@ -29,6 +29,7 @@ jobs:
         - poetry run codecov
     - script: poetry run mypy iregex
     - script: poetry run flake8 iregex
+    - script: poetry run make doctest
 
     - stage: deploy
       script: skip
