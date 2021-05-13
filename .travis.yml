@@ -55,7 +55,7 @@ jobs:
       deploy:
         provider: script
         skip_cleanup: true
-        script: git push --quiet --set-upstream origin-pages docs
+        script: git push --quiet --force --set-upstream origin-pages docs
         on:
           tags: true
           repo: ryanpeach/py_idiomatic_regex

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "iregex"
-version = "0.1.14"
+version = "0.1.15"
 description = "An idiomatic regex generator using OOP principals instead of long unreadable strings."
 authors = ["Ryan <ryanpeach@icloud.com>"]
 
