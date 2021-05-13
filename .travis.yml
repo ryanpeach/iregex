@@ -41,15 +41,15 @@ jobs:
           tags: true
           repo: ryanpeach/py_idiomatic_regex
           branch: master
-    - before_script:
+    - script: skip
+    - before_deploy:
         - poetry install -v
-      script:
         - poetry run make github
         - git config --global user.email "travis@travis-ci.org"
         - git config --global user.name "Travis CI"
         - git checkout -b docs
         - git add docs/
-        - git commit --message "Travis documentation build: $TRAVIS_BUILD_NUMBER"
+        - git commit -m "Travis documentation build."
         - git remote add origin-pages https://${GITHUB_TOKEN}@github.com/ryanpeach/py_idiomatic_regex.git > /dev/null 2>&1
       deploy:
         provider: script
