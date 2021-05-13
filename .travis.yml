@@ -41,8 +41,7 @@ jobs:
           tags: true
           repo: ryanpeach/py_idiomatic_regex
           branch: master
-    - script: skip
-    - before_deploy:
+    - script:
         - poetry install -v
         - poetry run make github
         - git config --global user.email "travis@travis-ci.org"
