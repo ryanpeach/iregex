@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Py Idiomatic Regex (AKA iregex) &#8212; iregex 2021 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Regex" href="iregex/regex.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="contents topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#py-idiomatic-regex-aka-iregex" id="id1">Py Idiomatic Regex (AKA iregex)</a></p>
+<ul>
+<li><p><a class="reference internal" href="#installation" id="id2">Installation</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id3">Examples</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#contributions" id="id4">Contributions</a></p></li>
+<li><p><a class="reference internal" href="#modules" id="id5">Modules</a></p></li>
+</ul>
+</div>
+<div class="section" id="py-idiomatic-regex-aka-iregex">
+<h1><a class="toc-backref" href="#id1">Py Idiomatic Regex (AKA iregex)</a><a class="headerlink" href="#py-idiomatic-regex-aka-iregex" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://travis-ci.com/ryanpeach/py_idiomatic_regex.svg?branch=master"><img alt="TravisCI Build Status" src="https://travis-ci.com/ryanpeach/py_idiomatic_regex.svg?branch=master" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/ryanpeach/py_idiomatic_regex"><img alt="codecov" src="https://codecov.io/gh/ryanpeach/py_idiomatic_regex/branch/master/graph/badge.svg" /></a>
+<p><a class="reference external" href="https://ryanpeach.github.io/py_idiomatic_regex">Documentation Available Here</a></p>
+<p>An easier way to write regex in Python using OOP instead of strings.</p>
+<p>Makes the code much easier to read and understand while still using Regex under the hood.</p>
+<p>Very easy to use, entirely contained within two files <code class="docutils literal notranslate"><span class="pre">consts.py</span></code> and <code class="docutils literal notranslate"><span class="pre">regex.py</span></code>.</p>
+<div class="section" id="installation">
+<h2><a class="toc-backref" href="#id2">Installation</a><a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://pypi.org/project/iregex/">Available on PyPi</a></p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">iregex</span></code></p>
+</div>
+<div class="section" id="examples">
+<h2><a class="toc-backref" href="#id3">Examples</a><a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Imagine a regex to match variable names in most common languages.</p>
+<p>They must start with an alphabetical character, then for the second character on they can contain numbers and underscores as well.</p>
+<p>The regex for this would be:</p>
+<p><code class="docutils literal notranslate"><span class="pre">[a-zA-Z][_\w]*</span></code></p>
+<p>And in python you would compile this like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[a-zA-Z][_\w]*&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this library the code would be:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">iregex</span> <span class="kn">import</span> <span class="n">Regex</span>
+<span class="kn">from</span> <span class="nn">iregex.consts</span> <span class="kn">import</span> <span class="n">ALPHA</span><span class="p">,</span> <span class="n">ALPHA_NUMERIC</span>
+<span class="p">(</span><span class="n">ALPHA</span> <span class="o">+</span> <span class="n">Regex</span><span class="p">()</span><span class="o">.</span><span class="n">any_char</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">ALPHA_NUMERIC</span><span class="p">)</span><span class="o">.</span><span class="n">zero_or_more_repetitions</span><span class="p">())</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>OR (Long, Functional form)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">iregex</span> <span class="kn">import</span> <span class="n">Regex</span>
+<span class="kn">from</span> <span class="nn">iregex.consts</span> <span class="kn">import</span> <span class="n">ALPHA</span><span class="p">,</span> <span class="n">ALPHA_NUMERIC</span>
+<span class="n">Regex</span><span class="p">(</span><span class="n">ALPHA</span><span class="p">)</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span>
+    <span class="n">Regex</span><span class="p">()</span><span class="o">.</span><span class="n">any_char</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">ALPHA_NUMERIC</span><span class="p">)</span><span class="o">.</span><span class="n">zero_or_more_repetitions</span><span class="p">()</span>
+<span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Just take a look at the documentation for the <code class="docutils literal notranslate"><span class="pre">Regex</span></code> class to get an idea of all the methods you can use!</p>
+<p>You chain methods together for sequential operations and nest literals for nested operations.</p>
+</div>
+</div>
+<div class="section" id="contributions">
+<h1><a class="toc-backref" href="#id4">Contributions</a><a class="headerlink" href="#contributions" title="Permalink to this headline">¶</a></h1>
+<p>Please make a contribution, this library is still growing!</p>
+<p>Please download <a class="reference external" href="https://python-poetry.org/">poetry</a> and run <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span></code> to set up your build environment.</p>
+<p>We use <code class="docutils literal notranslate"><span class="pre">mypy</span></code> (so be sure to type your code), <code class="docutils literal notranslate"><span class="pre">flake8</span></code>, and <code class="docutils literal notranslate"><span class="pre">black</span></code> so be sure to use <code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">install</span></code> before your first push to comply with git pre-commit standards. Otherwise your pull request will not make it past TravisCI.</p>
+<p>Always <code class="docutils literal notranslate"><span class="pre">pytest</span></code> your code and make PR’s with good code coverage.</p>
+</div>
+<div class="section" id="modules">
+<h1><a class="toc-backref" href="#id5">Modules</a><a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="iregex/regex.html">Regex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iregex/consts.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iregex/exceptions.html">Exceptions</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">iregex</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="iregex/regex.html">Regex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iregex/consts.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="iregex/exceptions.html">Exceptions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="iregex/regex.html" title="next chapter">Regex</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Ryan Peach.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

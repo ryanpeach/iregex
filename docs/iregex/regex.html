@@ -1,0 +1,605 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Regex &#8212; iregex 2021 documentation</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Constants" href="consts.html" />
+    <link rel="prev" title="Py Idiomatic Regex (AKA iregex)" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-iregex.regex">
+<span id="regex"></span><h1>Regex<a class="headerlink" href="#module-iregex.regex" title="Permalink to this headline">¶</a></h1>
+<p>This is the module containing the main Regex class.</p>
+<dl class="py class">
+<dt id="iregex.regex.Regex">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">iregex.regex.</span></code><code class="sig-name descname"><span class="pre">Regex</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regex_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for regex strings that hides the implementation.</p>
+<p>This class is immutable by convention.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">()</span>
+<span class="go">Regex(r&quot;&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;asdf&quot;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;asdf&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>regex_str</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – An optional literal to start your Regex with.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="iregex.regex.Regex.any_char">
+<code class="sig-name descname"><span class="pre">any_char</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">char</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.any_char" title="Permalink to this definition">¶</a></dt>
+<dd><p>Any of the characters listed as parameters may be used.</p>
+<p>Pass characters as parameters one at a time like so:</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">()</span><span class="o">.</span><span class="n">any_char</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;a&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">any_char</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;hello[world]&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>char</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Some character.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="exceptions.html#iregex.exceptions.NotACharacterException" title="iregex.exceptions.NotACharacterException"><strong>NotACharacterException</strong></a> – Raised if any argument is not a character.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.anything">
+<code class="sig-name descname"><span class="pre">anything</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.anything" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends zero or more of any character to the Regex.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">anything</span><span class="p">()</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;hello.*world&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.compile">
+<code class="sig-name descname"><span class="pre">compile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.compile" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple wrapper around re.compile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>) – Positional parameters to pass to re.compile.</p></li>
+<li><p><strong>kwargs</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>) – Keyword parameters to pass to re.compile.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Pattern</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.exactly_m_repetitions">
+<code class="sig-name descname"><span class="pre">exactly_m_repetitions</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.exactly_m_repetitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repeats the previous regex exactly m times.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exactly_m_repetitions</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">Regex(r&quot;a{3}&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;[asdf]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exactly_m_repetitions</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">Regex(r&quot;[asdf]{3}&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exactly_m_repetitions</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">Regex(r&quot;(?:hello world){3}&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>m</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Exactly this many instances.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="exceptions.html#iregex.exceptions.AlreadyRepeatingException" title="iregex.exceptions.AlreadyRepeatingException"><strong>AlreadyRepeatingException</strong></a> – If this is already a repeating regex.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.exclude_char">
+<code class="sig-name descname"><span class="pre">exclude_char</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">char</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.exclude_char" title="Permalink to this definition">¶</a></dt>
+<dd><p>None of the characters listed as parameters may be used.</p>
+<p>Pass characters as parameters one at a time like so:</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exclude_char</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;hello[^world]&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>char</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Some character.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="exceptions.html#iregex.exceptions.NotACharacterException" title="iregex.exceptions.NotACharacterException"><strong>NotACharacterException</strong></a> – Raised if any argument is not a character.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.literal">
+<code class="sig-name descname"><span class="pre">literal</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.literal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a literal to the end of the regex. Also aliases to <cite>+</cite>.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;hello world&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39;world&#39;</span>
+<span class="go">Regex(r&quot;hello world&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;hello&quot;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;hello world&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>regex</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a>]) – The regex to append to this regex.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="exceptions.html#iregex.exceptions.SetIntersectionError" title="iregex.exceptions.SetIntersectionError"><strong>SetIntersectionError</strong></a> – If the two _capture_groups share any values.</p></li>
+<li><p><strong>TypeError</strong> – If other is not either a Regex or a string.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.logical_or">
+<code class="sig-name descname"><span class="pre">logical_or</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.logical_or" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <cite>logical_or</cite> of two Regex’s. Also aliases to <cite>|</cite>.</p>
+<p>Neither <cite>self</cite> nor <cite>regex</cite> may contained named capture groups.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;(?:hello|world)&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="s1">&#39;world&#39;</span>
+<span class="go">Regex(r&quot;(?:hello|world)&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;hello&quot;</span> <span class="o">|</span> <span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;(?:hello|world)&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;fizz&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;buzz&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Regex</span><span class="p">(</span><span class="s1">&#39;fizzbuzz&#39;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;(?:fizz|buzz|fizzbuzz)&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="exceptions.html#iregex.exceptions.NonEmptyError" title="iregex.exceptions.NonEmptyError"><strong>NonEmptyError</strong></a> – If either contains named capture groups.</p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>regex</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a>]) – </p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.m_or_more_repetitions">
+<code class="sig-name descname"><span class="pre">m_or_more_repetitions</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.m_or_more_repetitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repeats the previous regex m or more times.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">m_or_more_repetitions</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">Regex(r&quot;a*&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">m_or_more_repetitions</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">Regex(r&quot;a+&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">m_or_more_repetitions</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">Regex(r&quot;a{3,}&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;[asdf]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">m_or_more_repetitions</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">Regex(r&quot;[asdf]{3,}&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">m_or_more_repetitions</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">Regex(r&quot;(?:hello world){3,}&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>m</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – This many or more instances.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – When m &lt; 0</p></li>
+<li><p><a class="reference internal" href="exceptions.html#iregex.exceptions.AlreadyRepeatingException" title="iregex.exceptions.AlreadyRepeatingException"><strong>AlreadyRepeatingException</strong></a> – If this is already a repeating regex.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.m_to_n_repetitions">
+<code class="sig-name descname"><span class="pre">m_to_n_repetitions</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.m_to_n_repetitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repeats the previous regex m to n inclusive times.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">m_to_n_repetitions</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">Regex(r&quot;a?&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">m_to_n_repetitions</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">Regex(r&quot;a{3,5}&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;[asdf]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">m_to_n_repetitions</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">Regex(r&quot;[asdf]{3,5}&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">m_to_n_repetitions</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">Regex(r&quot;(?:hello world){3,5}&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>m</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – At least this many times.</p></li>
+<li><p><strong>n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – At most this many times (inclusive).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="exceptions.html#iregex.exceptions.AlreadyRepeatingException" title="iregex.exceptions.AlreadyRepeatingException"><strong>AlreadyRepeatingException</strong></a> – If this is already a repeating regex.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.make_capture_group">
+<code class="sig-name descname"><span class="pre">make_capture_group</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.make_capture_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an anonymous capture group.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;.*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_capture_group</span><span class="p">()</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;(.*)world&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;.*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_capture_group</span><span class="p">()</span><span class="o">.</span><span class="n">make_capture_group</span><span class="p">()</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;(.*)world&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;.*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_non_capture_group</span><span class="p">()</span><span class="o">.</span><span class="n">make_capture_group</span><span class="p">()</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;(.*)world&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="exceptions.html#iregex.exceptions.AlreadyCapturedException" title="iregex.exceptions.AlreadyCapturedException"><strong>AlreadyCapturedException</strong></a> – If this is already a named capture group.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.make_lookahead">
+<code class="sig-name descname"><span class="pre">make_lookahead</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.make_lookahead" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the previous regex a lookahead group.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_lookahead</span><span class="p">())</span>
+<span class="go">Regex(r&quot;hello(?=world)&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.make_lookbehind">
+<code class="sig-name descname"><span class="pre">make_lookbehind</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.make_lookbehind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the previous regex a lookbehind group.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_lookbehind</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;world&quot;</span>
+<span class="go">Regex(r&quot;(?&lt;=hello)world&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.make_named_capture_group">
+<code class="sig-name descname"><span class="pre">make_named_capture_group</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.make_named_capture_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the previous regex a capture group of name <cite>name</cite>.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;.*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_named_capture_group</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;(?&lt;hello&gt;.*)world&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;.*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_non_capture_group</span><span class="p">()</span><span class="o">.</span><span class="n">make_named_capture_group</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;(?&lt;hello&gt;.*)world&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;.*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_capture_group</span><span class="p">()</span><span class="o">.</span><span class="n">make_named_capture_group</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;(?&lt;hello&gt;.*)world&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The name to assign the capture group.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="exceptions.html#iregex.exceptions.AlreadyCapturedException" title="iregex.exceptions.AlreadyCapturedException"><strong>AlreadyCapturedException</strong></a> – If this is already a named capture group.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.make_negative_lookahead">
+<code class="sig-name descname"><span class="pre">make_negative_lookahead</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.make_negative_lookahead" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the previous regex a negative lookahead group.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_negative_lookahead</span><span class="p">())</span>
+<span class="go">Regex(r&quot;hello(?!world)&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.make_negative_lookbehind">
+<code class="sig-name descname"><span class="pre">make_negative_lookbehind</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.make_negative_lookbehind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the previous regex a negative lookbehind group.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_negative_lookbehind</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;world&quot;</span>
+<span class="go">Regex(r&quot;(?&lt;!hello)world&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.make_non_capture_group">
+<code class="sig-name descname"><span class="pre">make_non_capture_group</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.make_non_capture_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intelligently creates a capture group that you don’t care to retreive the contents of.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_non_capture_group</span><span class="p">()</span>  <span class="c1"># This is unnecessary so it fails</span>
+<span class="go">Regex(r&quot;h&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;[asdf]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_non_capture_group</span><span class="p">()</span>  <span class="c1"># This is unnecessary so it fails</span>
+<span class="go">Regex(r&quot;[asdf]&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_non_capture_group</span><span class="p">()</span>  <span class="c1"># This succeeds</span>
+<span class="go">Regex(r&quot;(?:hello world)&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">make_capture_group</span><span class="p">()</span><span class="o">.</span><span class="n">make_non_capture_group</span><span class="p">()</span>  <span class="c1"># This succeeds</span>
+<span class="go">Regex(r&quot;(?:hello world)&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="exceptions.html#iregex.exceptions.AlreadyCapturedException" title="iregex.exceptions.AlreadyCapturedException"><strong>AlreadyCapturedException</strong></a> – If this is already a named capture group.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.newlines">
+<code class="sig-name descname"><span class="pre">newlines</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.newlines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows newlines after text.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">newlines</span><span class="p">()</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;hello(?:\n|\r\n?)*world&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.one_or_more_repetitions">
+<code class="sig-name descname"><span class="pre">one_or_more_repetitions</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.one_or_more_repetitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repeats the previous regex one or more times.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">one_or_more_repetitions</span><span class="p">()</span>
+<span class="go">Regex(r&quot;a+&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;[asdf]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">one_or_more_repetitions</span><span class="p">()</span>
+<span class="go">Regex(r&quot;[asdf]+&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">one_or_more_repetitions</span><span class="p">()</span>
+<span class="go">Regex(r&quot;(?:hello world)+&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="exceptions.html#iregex.exceptions.AlreadyRepeatingException" title="iregex.exceptions.AlreadyRepeatingException"><strong>AlreadyRepeatingException</strong></a> – If this is already a repeating regex.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.optional">
+<code class="sig-name descname"><span class="pre">optional</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.optional" title="Permalink to this definition">¶</a></dt>
+<dd><p>The previous regex can exist 0 or 1 times.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">optional</span><span class="p">()</span>
+<span class="go">Regex(r&quot;a?&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;[asdf]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">optional</span><span class="p">()</span>
+<span class="go">Regex(r&quot;[asdf]?&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">optional</span><span class="p">()</span>
+<span class="go">Regex(r&quot;(?:hello world)?&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="exceptions.html#iregex.exceptions.AlreadyRepeatingException" title="iregex.exceptions.AlreadyRepeatingException"><strong>AlreadyRepeatingException</strong></a> – If this is already a repeating regex.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.whitespace">
+<code class="sig-name descname"><span class="pre">whitespace</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.whitespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows unlimited whitespace.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">whitespace</span><span class="p">()</span><span class="o">.</span><span class="n">literal</span><span class="p">(</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+<span class="go">Regex(r&quot;hello\s*world&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="iregex.regex.Regex.zero_or_more_repetitions">
+<code class="sig-name descname"><span class="pre">zero_or_more_repetitions</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#iregex.regex.Regex.zero_or_more_repetitions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repeats the previous regex zero or more times.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">zero_or_more_repetitions</span><span class="p">()</span>
+<span class="go">Regex(r&quot;a*&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;[asdf]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">zero_or_more_repetitions</span><span class="p">()</span>
+<span class="go">Regex(r&quot;[asdf]*&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Regex</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">zero_or_more_repetitions</span><span class="p">()</span>
+<span class="go">Regex(r&quot;(?:hello world)*&quot;)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="exceptions.html#iregex.exceptions.AlreadyRepeatingException" title="iregex.exceptions.AlreadyRepeatingException"><strong>AlreadyRepeatingException</strong></a> – If this is already a repeating regex.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#iregex.regex.Regex" title="iregex.regex.Regex"><code class="xref py py-class docutils literal notranslate"><span class="pre">Regex</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">iregex</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Regex</a></li>
+<li class="toctree-l1"><a class="reference internal" href="consts.html">Constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Py Idiomatic Regex (AKA iregex)</a></li>
+      <li>Next: <a href="consts.html" title="next chapter">Constants</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Ryan Peach.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/iregex/regex.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
