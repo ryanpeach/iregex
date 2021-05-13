@@ -72,8 +72,9 @@ class Regex:
 
     def logical_or(self, regex: Union[str, "Regex"]) -> "Regex":
         """
-        The `or` of two Regex's is the group `(self|other)`.
-        Neither self nor other may contained named capture groups.
+        The `logical_or` of two Regex's. Also aliases to `|`.
+
+        Neither `self` nor `regex` may contained named capture groups.
 
         .. testsetup::
 
