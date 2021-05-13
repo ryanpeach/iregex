@@ -10,13 +10,17 @@ from iregex import Regex
 from iregex.consts import (
     ALPHA,
     ANY,
+    NEWLINE,
     NUMERIC,
     ONE_OR_MORE,
-    NEWLINE,
     WHITESPACE,
     ZERO_OR_MORE,
 )
-from iregex.exceptions import NonEmptyError, SetIntersectionError, NotACharacterException
+from iregex.exceptions import (
+    NonEmptyError,
+    NotACharacterException,
+    SetIntersectionError,
+)
 
 
 def test_regex_literal() -> None:
@@ -29,7 +33,10 @@ def test_regex_literal() -> None:
     "regex,result",
     [
         (Regex(NUMERIC).whitespace(), NUMERIC + WHITESPACE + ZERO_OR_MORE),
-        (Regex(NUMERIC+ALPHA).whitespace(), NUMERIC + ALPHA + WHITESPACE + ZERO_OR_MORE),
+        (
+            Regex(NUMERIC + ALPHA).whitespace(),
+            NUMERIC + ALPHA + WHITESPACE + ZERO_OR_MORE,
+        ),
     ],
 )
 def test_whitespace(regex: Regex, result: str) -> None:
@@ -40,8 +47,8 @@ def test_whitespace(regex: Regex, result: str) -> None:
 @pytest.mark.parametrize(
     "regex,result",
     [
-        (Regex(NUMERIC).newline(), NUMERIC + NEWLINE + ZERO_OR_MORE),
-        (Regex(NUMERIC+ALPHA).newline(), NUMERIC + ALPHA + NEWLINE + ZERO_OR_MORE),
+        (Regex(NUMERIC).newlines(), NUMERIC + NEWLINE + ZERO_OR_MORE),
+        (Regex(NUMERIC + ALPHA).newlines(), NUMERIC + ALPHA + NEWLINE + ZERO_OR_MORE),
     ],
 )
 def test_newline(regex: Regex, result: str) -> None:
@@ -53,7 +60,10 @@ def test_newline(regex: Regex, result: str) -> None:
     "regex,result",
     [
         (Regex(NUMERIC).zero_or_more_repetitions(), f"{NUMERIC}" + ZERO_OR_MORE),
-        (Regex(NUMERIC+ALPHA).zero_or_more_repetitions(), f"(?:{NUMERIC+ALPHA})" + ZERO_OR_MORE),
+        (
+            Regex(NUMERIC + ALPHA).zero_or_more_repetitions(),
+            f"(?:{NUMERIC+ALPHA})" + ZERO_OR_MORE,
+        ),
     ],
 )
 def test_zero_or_more_repetitions(regex: Regex, result: str) -> None:
@@ -65,7 +75,10 @@ def test_zero_or_more_repetitions(regex: Regex, result: str) -> None:
     "regex,result",
     [
         (Regex(NUMERIC).one_or_more_repetitions(), f"{NUMERIC}" + ONE_OR_MORE),
-        (Regex(NUMERIC+ALPHA).one_or_more_repetitions(), f"(?:{NUMERIC+ALPHA})" + ONE_OR_MORE),
+        (
+            Regex(NUMERIC + ALPHA).one_or_more_repetitions(),
+            f"(?:{NUMERIC+ALPHA})" + ONE_OR_MORE,
+        ),
     ],
 )
 def test_one_or_more_repetitions(regex: Regex, result: str) -> None:
@@ -77,7 +90,10 @@ def test_one_or_more_repetitions(regex: Regex, result: str) -> None:
     "regex,result",
     [
         (Regex(NUMERIC).m_to_n_repetitions(3, 5), f"{NUMERIC}" + "{3,5}"),
-        (Regex(NUMERIC+ALPHA).m_to_n_repetitions(3, 5), f"(?:{NUMERIC+ALPHA})" + "{3,5}"),
+        (
+            Regex(NUMERIC + ALPHA).m_to_n_repetitions(3, 5),
+            f"(?:{NUMERIC+ALPHA})" + "{3,5}",
+        ),
     ],
 )
 def test_m_to_n_repetitions(regex: Regex, result: str) -> None:
@@ -89,7 +105,10 @@ def test_m_to_n_repetitions(regex: Regex, result: str) -> None:
     "regex,result",
     [
         (Regex(NUMERIC).exactly_m_repetitions(3), f"{NUMERIC}" + "{3}"),
-        (Regex(NUMERIC+ALPHA).exactly_m_repetitions(3), f"(?:{NUMERIC+ALPHA})" + "{3}"),
+        (
+            Regex(NUMERIC + ALPHA).exactly_m_repetitions(3),
+            f"(?:{NUMERIC+ALPHA})" + "{3}",
+        ),
     ],
 )
 def test_exactly_m_repetitions(regex: Regex, result: str) -> None:
@@ -100,8 +119,11 @@ def test_exactly_m_repetitions(regex: Regex, result: str) -> None:
 @pytest.mark.parametrize(
     "regex,result",
     [
-        (Regex(NUMERIC).m_or_more_repetitions(3), f"{NUMERIC}" + "{2}" + f"{NUMERIC}" + ONE_OR_MORE),
-        (Regex(NUMERIC+ALPHA).m_or_more_repetitions(3), f"(?:{NUMERIC+ALPHA})" + "{2}" + f"(?:{NUMERIC+ALPHA})" + ONE_OR_MORE),
+        (Regex(NUMERIC).m_or_more_repetitions(3), f"{NUMERIC}" + "{3,}"),
+        (
+            Regex(NUMERIC + ALPHA).m_or_more_repetitions(3),
+            f"(?:{NUMERIC+ALPHA})" + "{3,}",
+        ),
     ],
 )
 def test_m_or_more_repetitions(regex: Regex, result: str) -> None:
@@ -113,7 +135,7 @@ def test_m_or_more_repetitions(regex: Regex, result: str) -> None:
     "regex,result",
     [
         (Regex(NUMERIC).optional(), f"{NUMERIC}?"),
-        (Regex(NUMERIC+ALPHA).optional(), f"(?:{NUMERIC+ALPHA})?"),
+        (Regex(NUMERIC + ALPHA).optional(), f"(?:{NUMERIC+ALPHA})?"),
     ],
 )
 def test_optional(regex: Regex, result: str) -> None:
@@ -123,10 +145,7 @@ def test_optional(regex: Regex, result: str) -> None:
 
 @pytest.mark.parametrize(
     "regex,result",
-    [
-        (Regex().any_char("a"), f"a"),
-        (Regex().any_char("a", "b"), f"[ab]"),
-    ],
+    [(Regex().any_char("a"), f"a"), (Regex().any_char("a", "b"), f"[ab]"),],
 )
 def test_any_char(regex: Regex, result: str) -> None:
     """Test basic any_char."""
@@ -135,10 +154,7 @@ def test_any_char(regex: Regex, result: str) -> None:
 
 @pytest.mark.parametrize(
     "regex_lazy",
-    [
-        lambda: Regex().any_char("ab"),
-        lambda: Regex().any_char("a", "bc"),
-    ],
+    [lambda: Regex().any_char("ab"), lambda: Regex().any_char("a", "bc"),],
 )
 def test_any_char_error(regex_lazy: Callable) -> None:
     """Test basic any_char."""
@@ -148,10 +164,7 @@ def test_any_char_error(regex_lazy: Callable) -> None:
 
 @pytest.mark.parametrize(
     "regex,result",
-    [
-        (Regex().exclude_char("a"), f"[^a]"),
-        (Regex().exclude_char("a", "b"), f"[^ab]"),
-    ],
+    [(Regex().exclude_char("a"), f"[^a]"), (Regex().exclude_char("a", "b"), f"[^ab]"),],
 )
 def test_exclude_char(regex: Regex, result: str) -> None:
     """Test basic exclude_char."""
@@ -160,10 +173,7 @@ def test_exclude_char(regex: Regex, result: str) -> None:
 
 @pytest.mark.parametrize(
     "regex_lazy",
-    [
-        lambda: Regex().exclude_char("ab"),
-        lambda: Regex().exclude_char("a", "bc"),
-    ],
+    [lambda: Regex().exclude_char("ab"), lambda: Regex().exclude_char("a", "bc"),],
 )
 def test_exclude_char_error(regex_lazy: Callable) -> None:
     """Test basic exclude_char."""
@@ -257,9 +267,19 @@ def test_add_set_intersection_error(self: Regex, other: Regex) -> None:
 @pytest.mark.parametrize(
     "self,other,result",
     [
-        (Regex(NUMERIC), Regex(NUMERIC), f"(?:{NUMERIC}|{NUMERIC})"),
-        (Regex(NUMERIC), NUMERIC, f"(?:{NUMERIC}|{NUMERIC})"),
-        (NUMERIC, Regex(NUMERIC), f"(?:{NUMERIC}|{NUMERIC})"),
+        (Regex(NUMERIC), Regex(ALPHA), f"(?:{NUMERIC}|{ALPHA})"),
+        (Regex(NUMERIC), ALPHA, f"(?:{NUMERIC}|{ALPHA})"),
+        (NUMERIC, Regex(ALPHA), f"(?:{NUMERIC}|{ALPHA})"),
+        (
+            Regex(fr"(?:{NUMERIC}|{ALPHA})"),
+            Regex(WHITESPACE),
+            f"(?:{NUMERIC}|{ALPHA}|{WHITESPACE})",
+        ),
+        (
+            Regex(WHITESPACE),
+            Regex(fr"(?:{NUMERIC}|{ALPHA})"),
+            f"(?:{WHITESPACE}|{NUMERIC}|{ALPHA})",
+        ),
     ],
 )
 def test_or(self: Regex, other: Regex, result: Regex) -> None:
