@@ -19,6 +19,20 @@ class Regex:
     A wrapper for regex strings that hides the implementation.
 
     This class is immutable by convention.
+
+    .. testsetup::
+
+            from iregex import Regex
+
+    .. doctest::
+
+        >>> Regex()
+        Regex()
+
+        >>> Regex("asdf")
+        Regex(r"asdf")
+
+    :param regex_str: An optional literal to start your Regex with.
     """
 
     # Private Variables
@@ -26,23 +40,7 @@ class Regex:
     _capture_groups: List[str]
 
     def __init__(self, regex_str: Optional[str] = None) -> None:
-        """
-        Optionally can take a literal as input.
-
-        .. testsetup::
-
-            from iregex import Regex
-
-        .. doctest::
-
-            >>> Regex()
-            Regex()
-
-            >>> Regex("asdf")
-            Regex(r"asdf")
-
-        :param regex_str: An optional literal to start your Regex with.
-        """
+        """Optionally can take a literal as input."""
         self._data = [regex_str] if regex_str else []
         self._capture_groups = []
 
