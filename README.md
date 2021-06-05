@@ -56,6 +56,10 @@ Just take a look at the documentation for the `Regex` class to get an idea of al
 
 You chain methods together for sequential operations and nest literals for nested operations.
 
+# [PyParsing](https://github.com/pyparsing/pyparsing)
+
+A lot of people will ask why use this over PyParsing? I actually had never heard of `pyparsing` before writing this library and sense have made updates that are inspired by `pyparsing`. The main reason I might use this over `pyparsing` is to stay specifically inside the Regex space using either the builtin `re` or `regex` library which can sometimes be faster than `pyparsing`. This library operates almost entirely on strings, which is a lot simpler than what `pyparsing` is doing under the hood. But please, use both!
+
 # Contributions
 
 Please make a contribution, this library is still growing!
