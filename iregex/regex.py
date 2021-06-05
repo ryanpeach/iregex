@@ -686,6 +686,80 @@ class Regex:
         out._capture_groups = []
         return out
 
+    def __and__(self, other: Union[str, "Regex"]) -> "Regex":
+        """
+        The `and` of two Regex's is the group `(?=self)(?=other)`.
+        Neither self nor other may contained named capture groups.
+
+        :raises NonEmptyError: If either contains named capture groups.
+        """
+        # Handle data types
+        if isinstance(other, str):
+            other_ = Regex(other)
+        elif isinstance(other, Regex):
+            other_ = other
+            if other._capture_groups:
+                raise NonEmptyError(
+                    f"Capture groups in other is not empty. Found: {other._capture_groups}"
+                )
+        else:
+            raise TypeError(f"Unrecognized type: {type(other)}")
+        del other  # So you don't reuse the variable
+
+        # Some other errors
+        if self._capture_groups:
+            raise NonEmptyError(
+                f"Capture groups in self is not empty. Found: {self._capture_groups}"
+            )
+
+        # Handle chained ands
+        if not re.fullmatch(r"(?:\(\?\=.+\))+", str(other_)):
+            other_ = other_.make_lookahead()
+        if not re.fullmatch(r"(?:\(\?\=.+\))+", str(self)):
+            self_ = self.make_lookahead()
+        else:
+            self_ = self
+        del self  # So you don't reuse the variable
+
+        return self_ + other_
+
+    def __rand__(self, other: Union[str, "Regex"]) -> "Regex":
+        """
+        The `and` of two Regex's is the group `(?=self)(?=other)`.
+        Neither self nor other may contained named capture groups.
+
+        :raises NonEmptyError: If either contains named capture groups.
+        """
+        # Handle data types
+        if isinstance(other, str):
+            other_ = Regex(other)
+        elif isinstance(other, Regex):
+            other_ = other
+            if other._capture_groups:
+                raise NonEmptyError(
+                    f"Capture groups in other is not empty. Found: {other._capture_groups}"
+                )
+        else:
+            raise TypeError(f"Unrecognized type: {type(other)}")
+        del other  # So you don't reuse the variable
+
+        # Some other errors
+        if self._capture_groups:
+            raise NonEmptyError(
+                f"Capture groups in self is not empty. Found: {self._capture_groups}"
+            )
+
+        # Handle chained ands
+        if not re.fullmatch(r"(?:\(\?\=.+\))+", str(other_)):
+            other_ = other_.make_lookahead()
+        if not re.fullmatch(r"(?:\(\?\=.+\))+", str(self)):
+            self_ = self.make_lookahead()
+        else:
+            self_ = self
+        del self  # So you don't reuse the variable
+
+        return other_ + self_
+
 
 # Some Functional Definitions
 
@@ -722,6 +796,11 @@ def Option(x: Union[Regex, str]) -> Regex:
 
 def Or(x: Union[Regex, str], y: Union[Regex, str]) -> Regex:
     """A wrapper for `Regex.__or__`."""
+    return Regex(x) | Regex(y)
+
+
+def And(x: Union[Regex, str], y: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex.__and__`."""
     return Regex(x) | Regex(y)
 
 

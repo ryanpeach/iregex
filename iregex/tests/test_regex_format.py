@@ -256,3 +256,41 @@ def test_or_non_empty_error(self: Regex, other: Regex) -> None:
     """Tests that an or error pops up in certain scenarios."""
     with pytest.raises(NonEmptyError):
         self | other
+
+
+@pytest.mark.parametrize(
+    "self,other,result",
+    [
+        (NUMERIC, ALPHA, f"(?={NUMERIC})(?={ALPHA})"),
+        (NUMERIC, ALPHA, f"(?={NUMERIC})(?={ALPHA})"),
+        (NUMERIC, ALPHA, f"(?={NUMERIC})(?={ALPHA})"),
+        (
+            Regex(fr"(?={NUMERIC})(?={ALPHA})"),
+            WHITESPACE,
+            f"(?={NUMERIC})(?={ALPHA})(?={WHITESPACE})",
+        ),
+        (
+            WHITESPACE,
+            Regex(fr"(?={NUMERIC})(?={ALPHA})"),
+            f"(?={WHITESPACE})(?={NUMERIC})(?={ALPHA})",
+        ),
+    ],
+)
+def test_and(self: Regex, other: Regex, result: Regex) -> None:
+    """Tests basic and."""
+    assert str(self & other) == str(result)
+
+
+@pytest.mark.parametrize(
+    "self,other",
+    [
+        (
+            NUMERIC.make_named_capture_group("name1"),
+            ALPHA.make_named_capture_group("name2"),
+        )
+    ],
+)
+def test_and_non_empty_error(self: Regex, other: Regex) -> None:
+    """Tests that an and error pops up in certain scenarios."""
+    with pytest.raises(NonEmptyError):
+        self & other
