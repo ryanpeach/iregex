@@ -2,7 +2,7 @@
 Convenient constants for use in Regex.
 """
 
-from iregex import Regex
+from iregex.regex import Regex
 
 #: Any whitespace character
 WHITESPACE = Regex(r"\s")
