@@ -1,12 +1,10 @@
 """
 This is the module containing the main Regex class.
 """
-
 import re
 from copy import copy
 from typing import Any, List, Optional, Union
 
-from iregex.consts import ANY, NEWLINE, ONE_OR_MORE, OPTIONAL, WHITESPACE, ZERO_OR_MORE
 from iregex.exceptions import (
     AlreadyCapturedException,
     AlreadyRepeatingException,
@@ -41,117 +39,14 @@ class Regex:
     _data: List[str]
     _capture_groups: List[str]
 
-    def __init__(self, regex_str: Optional[str] = None) -> None:
+    def __init__(self, regex_str: Optional[Union["Regex", str]] = None) -> None:
         """Optionally can take a literal as input."""
+        if isinstance(regex_str, Regex):
+            regex_str = str(regex_str)
         self._data = [regex_str] if regex_str else []
         self._capture_groups = []
 
     # ============== Chained Methods ==============
-    def literal(self, regex: Union[str, "Regex"]) -> "Regex":
-        """
-        Adds a literal to the end of the regex. Also aliases to `+`.
-
-        .. testsetup::
-
-            from iregex import Regex
-
-        .. doctest::
-
-            >>> Regex("hello").literal(' ').literal('world')
-            Regex(r"hello world")
-
-            >>> Regex("hello") + ' ' + 'world'
-            Regex(r"hello world")
-
-            >>> "hello" + ' ' + Regex('world')
-            Regex(r"hello world")
-
-        :param regex: The regex to append to this regex.
-        :raises SetIntersectionError: If the two _capture_groups share any values.
-        :raises TypeError: If other is not either a Regex or a string.
-        """
-        return self + regex
-
-    def logical_or(self, regex: Union[str, "Regex"]) -> "Regex":
-        """
-        The `logical_or` of two Regex's. Also aliases to `|`.
-
-        Neither `self` nor `regex` may contained named capture groups.
-
-        .. testsetup::
-
-            from iregex import Regex
-
-        .. doctest::
-
-            >>> Regex("hello").logical_or('world')
-            Regex(r"(?:hello|world)")
-
-            >>> Regex("hello") | 'world'
-            Regex(r"(?:hello|world)")
-
-            >>> "hello" | Regex('world')
-            Regex(r"(?:hello|world)")
-
-            >>> Regex("fizz") | Regex('buzz') | Regex('fizzbuzz')
-            Regex(r"(?:fizz|buzz|fizzbuzz)")
-
-        :raises NonEmptyError: If either contains named capture groups.
-        """
-        return self | regex
-
-    def anything(self) -> "Regex":
-        """
-        Appends zero or more of any character to the Regex.
-
-        .. testsetup::
-
-            from iregex import Regex
-
-        .. doctest::
-
-            >>> Regex("hello").anything().literal("world")
-            Regex(r"hello.*world")
-
-        """
-        return self.literal(ANY + ZERO_OR_MORE)
-
-    def whitespace(self) -> "Regex":
-        r"""
-        Allows unlimited whitespace.
-
-        .. testsetup::
-
-            from iregex import Regex
-
-        .. doctest::
-
-            >>> Regex("hello").whitespace().literal("world")
-            Regex(r"hello\s*world")
-
-        """
-        out = copy(self)
-        out._data.append(WHITESPACE + ZERO_OR_MORE)
-        return out
-
-    def newlines(self) -> "Regex":
-        r"""
-        Allows newlines after text.
-
-        .. testsetup::
-
-            from iregex import Regex
-
-        .. doctest::
-
-            >>> Regex("hello").newlines().literal("world")
-            Regex(r"hello(?:\n|\r\n?)*world")
-
-        """
-        out = copy(self)
-        out._data.append(NEWLINE + ZERO_OR_MORE)
-        return out
-
     @staticmethod
     def _is_repeating(txt: Union[str, "Regex"]) -> bool:
         """Tests if a regex string is repeating."""
@@ -182,7 +77,7 @@ class Regex:
         if Regex._is_repeating(self):
             raise AlreadyRepeatingException("{self} is already repeating.")
         out = self.make_non_capture_group()
-        out._data.append(ZERO_OR_MORE)
+        out._data.append(r"*")
         return out
 
     def one_or_more_repetitions(self) -> "Regex":
@@ -209,7 +104,7 @@ class Regex:
         if Regex._is_repeating(self):
             raise AlreadyRepeatingException("{self} is already repeating.")
         out = self.make_non_capture_group()
-        out._data.append(ONE_OR_MORE)
+        out._data.append(r"+")
         return out
 
     def m_to_n_repetitions(self, m: int, n: int) -> "Regex":
@@ -242,7 +137,7 @@ class Regex:
             raise AlreadyRepeatingException("{self} is already repeating.")
         out = self.make_non_capture_group()
         if m == 0 and n == 1:
-            out._data.append(OPTIONAL)
+            out._data.append(r"?")
         else:
             out._data.append("{" + str(m) + "," + str(n) + "}")
         return out
@@ -340,7 +235,7 @@ class Regex:
         if Regex._is_repeating(self):
             raise AlreadyRepeatingException("{self} is already repeating.")
         out = self.make_non_capture_group()
-        out._data.append(OPTIONAL)
+        out._data.append(r"?")
         return out
 
     @staticmethod
@@ -653,6 +548,10 @@ class Regex:
         """Two Regex's are equal if their regex strings are equal."""
         return str(self) == str(other)
 
+    def __hash__(self) -> int:
+        """Hashes the string representation."""
+        return hash(str(self))
+
     def __add__(self, other: Union["Regex", str]) -> "Regex":
         """
         Adding two Regex's is just appending their strings.
@@ -786,3 +685,86 @@ class Regex:
             out._data = ["(?:"] + other_._data + ["|"] + self._data + [")"]
         out._capture_groups = []
         return out
+
+
+# Some Functional Definitions
+
+
+def Literal(x: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex`."""
+    return Regex(x)
+
+
+def ZeroOrMore(x: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex.zero_or_more_repetitions`."""
+    return Regex(x).zero_or_more_repetitions()
+
+
+def OneOrMore(x: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex.one_or_more_repetitions`."""
+    return Regex(x).one_or_more_repetitions()
+
+
+def MOrMore(x: Union[Regex, str], m: int) -> Regex:
+    """A wrapper for `Regex.m_or_more_repetitions`."""
+    return Regex(x).m_or_more_repetitions(m)
+
+
+def MToN(x: Union[Regex, str], m: int, n: int) -> Regex:
+    """A wrapper for `Regex.m_to_n_repetitions`."""
+    return Regex(x).m_to_n_repetitions(m, n)
+
+
+def Option(x: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex.optional`."""
+    return Regex(x).optional()
+
+
+def Or(x: Union[Regex, str], y: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex.__or__`."""
+    return Regex(x) | Regex(y)
+
+
+def Lookahead(x: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex.make_lookahead`."""
+    return Regex(x).make_lookahead()
+
+
+def Lookbehind(x: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex.make_lookbehind`."""
+    return Regex(x).make_lookbehind()
+
+
+def NegativeLookahead(x: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex.make_negative_lookahead`."""
+    return Regex(x).make_negative_lookahead()
+
+
+def NegativeLookbehind(x: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex.make_negative_lookbehind`."""
+    return Regex(x).make_negative_lookbehind()
+
+
+def CaptureGroup(x: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex.make_capture_group`."""
+    return Regex(x).make_capture_group()
+
+
+def NamedCaptureGroup(x: Union[Regex, str], name: str) -> Regex:
+    """A wrapper for `Regex.make_named_capture_group`."""
+    return Regex(x).make_named_capture_group(name)
+
+
+def NonCaptureGroup(x: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex.make_non_capture_group`."""
+    return Regex(x).make_non_capture_group()
+
+
+def AnyChar(*x: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex.any_char`."""
+    return Regex().any_char(*x)
+
+
+def ExcludeChar(*x: Union[Regex, str]) -> Regex:
+    """A wrapper for `Regex.exclude_char`."""
+    return Regex().exclude_char(*x)

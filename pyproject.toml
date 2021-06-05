@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "iregex"
-version = "0.1.16"
+version = "0.2.0"
 description = "An idiomatic regex generator using OOP principals instead of long unreadable strings."
 authors = ["Ryan <ryanpeach@icloud.com>"]
 
@@ -21,6 +21,7 @@ codecov = "^2.1.11"
 m2r2 = "^0.2.7"
 sphinx_autodoc_typehints = "^1.12.0"
 pydocstyle = "^6.0.0"
+bumpversion = "^0.6.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
