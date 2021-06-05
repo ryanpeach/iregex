@@ -42,6 +42,16 @@ from iregex import Regex, ALPHA, ALPHA_NUMERIC, AnyChar, ZeroOrMore
 (ALPHA + ZeroOrMore(AnyChar("_", ALPHA_NUMERIC))).compile()
 ```
 
+Note: If you would like to use the `regex` library instead of `re` do this instead.
+
+```python
+import regex
+from iregex import Regex, ALPHA, ALPHA_NUMERIC, AnyChar, ZeroOrMore
+regex.compile(str(ALPHA + ZeroOrMore(AnyChar("_", ALPHA_NUMERIC))))
+```
+
+We do this to prevent the need for additional dependencies.
+
 Just take a look at the documentation for the `Regex` class to get an idea of all the methods you can use!
 
 You chain methods together for sequential operations and nest literals for nested operations.
